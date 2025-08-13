@@ -6,7 +6,6 @@ import { cn } from "@/lib/utils"
 
 interface SwordCutEffectProps {
   children: React.ReactNode
-  scrollTriggerPercent?: number // Percentage of scroll to trigger cut (0-100)
   className?: string
   manualTrigger?: boolean
   resetTrigger?: boolean
@@ -15,14 +14,12 @@ interface SwordCutEffectProps {
 
 export function SwordCutEffect({
   children,
-  scrollTriggerPercent = 10,
   className,
   manualTrigger = false,
   resetTrigger = false,
   onTriggerComplete,
 }: SwordCutEffectProps) {
   const [phase, setPhase] = useState<"idle" | "slash" | "cut" | "separated">("idle")
-  const [scrollPercent, setScrollPercent] = useState(0)
   const [animationKey, setAnimationKey] = useState(0)
 
   useEffect(() => {
@@ -43,34 +40,8 @@ export function SwordCutEffect({
     }
   }, [resetTrigger])
 
-  useEffect(() => {
-    const handleScroll = () => {
-      const scrollTop = window.scrollY
-      const docHeight = document.documentElement.scrollHeight - window.innerHeight
-      const scrolled = Math.min((scrollTop / docHeight) * 100, 100)
-      setScrollPercent(scrolled)
-
-      if (scrolled >= scrollTriggerPercent && phase === "idle") {
-        setPhase("slash")
-        setTimeout(() => setPhase("cut"), 600)
-        setTimeout(() => {
-          setPhase("separated")
-        }, 1200)
-      }
-    }
-
-    window.addEventListener("scroll", handleScroll)
-    handleScroll()
-
-    return () => window.removeEventListener("scroll", handleScroll)
-  }, [scrollTriggerPercent, phase])
-
   return (
     <div className={cn("relative overflow-hidden", className)} key={animationKey}>
-      <div className="fixed top-4 right-4 z-50 bg-black/50 text-white px-3 py-1 rounded text-sm">
-        Scroll: {Math.round(scrollPercent)}% (Cut at {scrollTriggerPercent}%)
-      </div>
-
       {phase === "slash" && (
         <div className="absolute inset-0 z-20 pointer-events-none">
          <svg className="absolute inset-0 w-full h-full" viewBox="0 0 100 100" preserveAspectRatio="none">
@@ -91,6 +62,7 @@ export function SwordCutEffect({
                 <feGaussianBlur stdDeviation="6" result="largeBlur" />
                 <feMerge>
                   <feMergeNode in="largeBlur" />
+                  <feMergeNode in="mediumBlur" />
                   <feMergeNode in="mediumBlur" />
                   <feMergeNode in="smallBlur" />
                   <feMergeNode in="SourceGraphic" />

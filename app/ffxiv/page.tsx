@@ -6,6 +6,7 @@ import Link from "next/link";
 import { useEffect, useState } from "react";
 import FFXIVInteractive from "../../components/ffxiv-interactive";
 import FFXIVBackgroundWrapper from "../../components/ffxiv-background-wrapper";
+import { SwordCutEffect } from "../../components/sword-cut-effect";
 
 // Custom components that can be used in MDX
 const components = {
@@ -48,6 +49,9 @@ export default function FFXIVPage() {
   const [Part1Component, setPart1Component] = useState<any>(null);
   const [Part2Component, setPart2Component] = useState<any>(null);
   const [loading, setLoading] = useState(true);
+  const [manualTrigger, setManualTrigger] = useState(false);
+  const [resetTrigger, setResetTrigger] = useState(false);
+  const [hasTriggered, setHasTriggered] = useState(false);
 
   useEffect(() => {
     async function loadMDXContent() {
@@ -68,6 +72,18 @@ export default function FFXIVPage() {
 
     loadMDXContent();
   }, []);
+
+  const handleStartAnimation = () => {
+    setManualTrigger(true);
+    setHasTriggered(true);
+  };
+
+  const handleResetAnimation = () => {
+    setResetTrigger(true);
+    setHasTriggered(false);
+    // Reset the trigger after a short delay
+    setTimeout(() => setResetTrigger(false), 100);
+  };
 
   if (loading) {
     return (
@@ -111,32 +127,93 @@ export default function FFXIVPage() {
           <p className="text-xl text-white/80 max-w-2xl mx-auto">Race • Class • Server</p>
         </motion.div>
 
-        {/* Main Lore Section - Full Width */}
+        {/* Main Lore Section - Full Width with Sword Cut Effect */}
         <motion.section 
-          className="max-w-6xl mx-auto mb-16"
+          className="max-w-6xl mx-auto mb-16 relative"
           initial={{ opacity: 0, y: 30 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.7 }}
         >
-          <div className="bg-black/30 backdrop-blur-sm rounded-2xl p-8 sm:p-12 border border-white/10">
-            <h2 className="text-3xl font-bold text-white mb-8 flex items-center gap-3">
-              <span className="w-2 h-8 bg-purple-400 rounded-full"></span>
-              Character Lore & Story
-            </h2>
-            
-            {/* First Part of the Story - Before the Cut */}
-            <div className="mb-8">
-              {Part1Component && <Part1Component components={components} />}
-            </div>
+          <SwordCutEffect 
+            manualTrigger={manualTrigger}
+            resetTrigger={resetTrigger}
+            className="w-full"
+          >
+            <div className="bg-black/30 backdrop-blur-sm rounded-2xl p-8 sm:p-12 border border-white/10">
+              <h2 className="text-3xl font-bold text-white mb-8 flex items-center gap-3">
+                <span className="w-2 h-8 bg-purple-400 rounded-full"></span>
+                Character Lore & Story
+              </h2>
+              
+              {/* Test Button for Sword Cut Effect */}
+              <div className="mb-6 text-center">
+                <button
+                  onClick={handleStartAnimation}
+                  disabled={hasTriggered}
+                  className="px-4 py-2 bg-red-600 hover:bg-red-700 disabled:bg-gray-500 disabled:cursor-not-allowed text-white font-bold rounded-lg shadow-lg transition-colors duration-200"
+                >
+                  🗡️ Test Sword Cut Effect
+                </button>
+                {hasTriggered && (
+                  <button
+                    onClick={handleResetAnimation}
+                    className="ml-4 px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white font-bold rounded-lg shadow-lg transition-colors duration-200"
+                  >
+                    🔄 Reset
+                  </button>
+                )}
+              </div>
+              
+              {/* First Part of the Story - Before the Cut */}
+              <div className="mb-8">
+                {Part1Component && <Part1Component components={components} />}
+              </div>
 
-            {/* Sword Cut Effect Component - Inserted in the middle of the story */}
-            <FFXIVInteractive />
+              {/* Control Buttons */}
+              <div className="bg-gradient-to-r from-red-500/20 to-purple-600/20 p-6 rounded-lg border border-white/20 my-12">
+                <div className="text-center">
+                  <h3 className="text-2xl font-bold text-white mb-4">The Great Divide</h3>
+                  <p className="text-white/80 mb-6">
+                    At this moment in the story, a great challenge awaits. The path forward is unclear, 
+                    and only through decisive action can the tale continue...
+                  </p>
+                  
+                  {/* Sword Cut Control Buttons */}
+                  <div className="flex justify-center gap-4">
+                    <button
+                      onClick={handleStartAnimation}
+                      disabled={hasTriggered}
+                      className="px-6 py-3 bg-red-600 hover:bg-red-700 disabled:bg-gray-500 disabled:cursor-not-allowed text-white font-bold rounded-lg shadow-lg transition-colors duration-200 flex items-center gap-2"
+                    >
+                      🗡️ Cut Through the Challenge
+                    </button>
+                    <button
+                      onClick={handleResetAnimation}
+                      disabled={!hasTriggered}
+                      className="px-6 py-3 bg-blue-600 hover:bg-blue-700 disabled:bg-gray-500 disabled:cursor-not-allowed text-white font-bold rounded-lg shadow-lg transition-colors duration-200 flex items-center gap-2"
+                    >
+                      🔄 Restore Unity
+                    </button>
+                  </div>
 
-            {/* Second Part of the Story - After the Cut */}
-            <div className="mt-8">
-              {Part2Component && <Part2Component components={components} />}
+                  {/* Immersive Description */}
+                  <div className="text-center mt-4">
+                    <p className="text-white/60 text-sm italic">
+                      {hasTriggered 
+                        ? "The story has been cut in half! The two pieces remain separated, creating a lasting visual impact." 
+                        : "Click the button above to dramatically cut the story section in half with a sword effect!"
+                      }
+                    </p>
+                  </div>
+                </div>
+              </div>
+
+              {/* Second Part of the Story - After the Cut */}
+              <div className="mt-8">
+                {Part2Component && <Part2Component components={components} />}
+              </div>
             </div>
-          </div>
+          </SwordCutEffect>
         </motion.section>
 
         {/* Secondary Sections - Grid Layout */}
