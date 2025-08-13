@@ -69,10 +69,10 @@ export function SwordCutEffect({
 
               {/* Main slash line */}
               <motion.line
-                x1="10"
+                x1="-10"
                 y1="50"
-                x2="90"
-                y2="45"
+                x2="100"
+                y2="49.9"
                 stroke="url(#slashGradient)"
                 strokeWidth="0.2"
                 initial={{ pathLength: 0, opacity: 0 }}
@@ -85,10 +85,10 @@ export function SwordCutEffect({
 
               {/* Glow effect */}
               <motion.line
-                x1="10"
+                x1="-10"
                 y1="50"
-                x2="90"
-                y2="45"
+                x2="100"
+                y2="49.9"
                 stroke="url(#glowGradient)"
                 strokeWidth="0.8"
                 initial={{ pathLength: 0, opacity: 0 }}
