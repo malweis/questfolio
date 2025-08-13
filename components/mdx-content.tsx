@@ -6,6 +6,7 @@ import { motion } from 'framer-motion';
 const components = {
   h1: (props: any) => (
     <motion.h1 
+      id="character-title"
       className="text-4xl font-bold text-white mb-6 border-b border-purple-400/30 pb-4"
       initial={{ opacity: 0, y: -20 }}
       whileInView={{ opacity: 1, y: 0 }}
@@ -16,6 +17,7 @@ const components = {
   ),
   h2: (props: any) => (
     <motion.h2 
+      id={props.children?.toLowerCase().replace(/\s+/g, '-')}
       className="text-3xl font-semibold text-white mt-12 mb-6 text-purple-300"
       initial={{ opacity: 0, x: -20 }}
       whileInView={{ opacity: 1, x: 0 }}
@@ -56,7 +58,7 @@ const components = {
   ),
   ol: (props: any) => (
     <motion.ol 
-      className="list-decimal list-inside text-lg text-white/90 mb-6 space-y-2 ml-4"
+      className="list-disc list-inside text-lg text-white/90 mb-6 space-y-2 ml-4"
       initial={{ opacity: 0, x: -10 }}
       whileInView={{ opacity: 1, x: 0 }}
       viewport={{ once: true }}
