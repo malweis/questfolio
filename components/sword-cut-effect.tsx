@@ -3,7 +3,9 @@
 import React from "react"
 import { useEffect, useState } from "react"
 import { motion, AnimatePresence } from "framer-motion"
+import useSound from "use-sound"
 import { cn } from "@/lib/utils"
+import { useSoundContext } from "../app/ffxiv/page"
 
 interface SwordCutEffectProps {
   children: React.ReactNode
@@ -22,20 +24,62 @@ export function SwordCutEffect({
 }: SwordCutEffectProps) {
   const [phase, setPhase] = useState<"idle" | "slash" | "cut" | "separated">("idle")
   const [animationKey, setAnimationKey] = useState(0)
+  const { soundEnabled } = useSoundContext()
+
+  // Sound effects using use-sound
+  const [playSlash] = useSound('/sounds/sword-slash.mp3', { 
+    volume: 0.6,
+    playbackRate: 1.0,
+    interrupt: true,
+    soundEnabled: soundEnabled
+  })
+  
+  const [playCut] = useSound('/sounds/sword-cut.mp3', { 
+    volume: 0.7,
+    playbackRate: 1.0,
+    interrupt: true,
+    soundEnabled: soundEnabled
+  })
+  
+  const [playSeparate] = useSound('/sounds/content-separate.mp3', { 
+    volume: 0.5,
+    playbackRate: 0.9,
+    interrupt: true,
+    soundEnabled: soundEnabled
+  })
 
   useEffect(() => {
     if (manualTrigger && phase === "idle") {
       setPhase("slash")
-      setTimeout(() => setPhase("cut"), 600)
+      // Play slash sound immediately if sound is enabled
+      if (soundEnabled) {
+        playSlash()
+      }
+      
       setTimeout(() => {
+        console.log("Moving to cut phase")
+        setPhase("cut")
+        // Play cut sound if sound is enabled
+        if (soundEnabled) {
+          playCut()
+        }
+      }, 600)
+      
+      setTimeout(() => {
+        console.log("Moving to separated phase")
         setPhase("separated")
+        // Play separation sound if sound is enabled
+        if (soundEnabled) {
+          playSeparate()
+        }
         onTriggerComplete?.()
       }, 1200)
     }
-  }, [manualTrigger, phase, onTriggerComplete])
+  }, [manualTrigger, phase, onTriggerComplete, playSlash, playCut, playSeparate, soundEnabled])
 
   useEffect(() => {
     if (resetTrigger) {
+      console.log("Resetting animation")
       setPhase("idle")
       setAnimationKey((prev) => prev + 1)
     }
