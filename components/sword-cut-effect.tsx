@@ -1,7 +1,8 @@
 "use client"
 
-import type React from "react"
+import React from "react"
 import { useEffect, useState } from "react"
+import { motion, AnimatePresence } from "framer-motion"
 import { cn } from "@/lib/utils"
 
 interface SwordCutEffectProps {
@@ -42,281 +43,155 @@ export function SwordCutEffect({
 
   return (
     <div className={cn("relative overflow-hidden", className)} key={animationKey}>
-      {phase === "slash" && (
-        <div className="absolute inset-0 z-20 pointer-events-none">
-         <svg className="absolute inset-0 w-full h-full" viewBox="0 0 100 100" preserveAspectRatio="none">
-            <defs>
-              <linearGradient id="slashGradient" x1="0%" y1="0%" x2="100%" y2="0%">
-                <stop offset="0%" stopColor="rgba(255,255,255,0)" />
-                <stop offset="50%" stopColor="rgba(255,255,255,1)" />
-                <stop offset="100%" stopColor="rgba(255,255,255,0)" />
-              </linearGradient>
-              <linearGradient id="glowGradient" x1="0%" y1="0%" x2="100%" y2="0%">
-                <stop offset="0%" stopColor="rgba(0,255,255,0)" />
-                <stop offset="50%" stopColor="rgba(0,255,255,0.8)" />
-                <stop offset="100%" stopColor="rgba(0,255,255,0)" />
-              </linearGradient>
-              <filter id="glow" x="-50%" y="-50%" width="200%" height="200%">
-                <feGaussianBlur stdDeviation="1" result="smallBlur" />
-                <feGaussianBlur stdDeviation="3" result="mediumBlur" />
-                <feGaussianBlur stdDeviation="6" result="largeBlur" />
-                <feMerge>
-                  <feMergeNode in="largeBlur" />
-                  <feMergeNode in="mediumBlur" />
-                  <feMergeNode in="mediumBlur" />
-                  <feMergeNode in="smallBlur" />
-                  <feMergeNode in="SourceGraphic" />
-                </feMerge>
-              </filter>
-              <filter id="outerGlow" x="-100%" y="-100%" width="300%" height="300%">
-                <feGaussianBlur stdDeviation="8" result="outerBlur" />
-                <feColorMatrix values="0 1 1 0 0  0 1 1 0 0  0 1 1 0 0  0 0 0 1 0" result="cyan" />
-                <feMerge>
-                  <feMergeNode in="cyan" />
-                  <feMergeNode in="SourceGraphic" />
-                </feMerge>
-              </filter>
-            </defs>
+      {/* Sword Slash Effect */}
+      <AnimatePresence>
+        {phase === "slash" && (
+          <motion.div 
+            className="absolute inset-0 z-20 pointer-events-none"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: 0.2 }}
+          >
+            <svg className="absolute inset-0 w-full h-full" viewBox="0 0 100 100" preserveAspectRatio="none">
+              <defs>
+                <linearGradient id="slashGradient" x1="0%" y1="0%" x2="100%" y2="0%">
+                  <stop offset="0%" stopColor="rgba(255,255,255,0)" />
+                  <stop offset="50%" stopColor="rgba(255,255,255,1)" />
+                  <stop offset="100%" stopColor="rgba(255,255,255,0)" />
+                </linearGradient>
+                <linearGradient id="glowGradient" x1="0%" y1="0%" x2="100%" y2="0%">
+                  <stop offset="0%" stopColor="rgba(0,255,255,0)" />
+                  <stop offset="50%" stopColor="rgba(0,255,255,0.6)" />
+                  <stop offset="100%" stopColor="rgba(0,255,255,0)" />
+                </linearGradient>
+              </defs>
 
-            <line
-              x1="-10"
-              y1="50"
-              x2="110"
-              y2="40"
-              stroke="rgba(0,255,255,0.3)"
-              strokeWidth="2"
-              className="slash-outer-glow"
-              filter="url(#outerGlow)"
-            />
+              {/* Main slash line */}
+              <motion.line
+                x1="10"
+                y1="50"
+                x2="90"
+                y2="45"
+                stroke="url(#slashGradient)"
+                strokeWidth="0.2"
+                initial={{ pathLength: 0, opacity: 0 }}
+                animate={{ pathLength: 1, opacity: 1 }}
+                transition={{ 
+                  pathLength: { duration: 0.4, ease: "easeOut" },
+                  opacity: { duration: 0.3, delay: 0.1 }
+                }}
+              />
 
-            <line
-              x1="-10"
-              y1="50"
-              x2="110"
-              y2="40"
-              stroke="url(#glowGradient)"
-              strokeWidth="1.2"
-              className="slash-glow"
-              opacity="0.9"
-              filter="url(#glow)"
-            />
+              {/* Glow effect */}
+              <motion.line
+                x1="10"
+                y1="50"
+                x2="90"
+                y2="45"
+                stroke="url(#glowGradient)"
+                strokeWidth="0.8"
+                initial={{ pathLength: 0, opacity: 0 }}
+                animate={{ pathLength: 1, opacity: 0.7 }}
+                transition={{ 
+                  pathLength: { duration: 0.5, ease: "easeOut" },
+                  opacity: { duration: 0.4, delay: 0.2 }
+                }}
+              />
+            </svg>
+          </motion.div>
+        )}
+      </AnimatePresence>
 
-            {/* Main slash line */}
-            <line
-              x1="-10"
-              y1="50"
-              x2="110"
-              y2="40"
-              stroke="url(#slashGradient)"
-              strokeWidth="0.3"
-              className="slash-main"
-              filter="url(#glow)"
-            />
+      {/* Spark Effects */}
+      <AnimatePresence>
+        {phase === "cut" && (
+          <motion.div 
+            className="absolute inset-0 z-10 pointer-events-none"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: 0.3 }}
+          >
+            {[...Array(8)].map((_, i) => (
+              <motion.div
+                key={i}
+                className="absolute bg-yellow-400 rounded-full"
+                style={{
+                  width: Math.random() * 3 + 2 + "px",
+                  height: Math.random() * 3 + 2 + "px",
+                  top: "50%",
+                  left: 20 + i * 8 + "%",
+                }}
+                initial={{ 
+                  scale: 0, 
+                  opacity: 0, 
+                  y: 0,
+                  x: 0
+                }}
+                animate={{ 
+                  scale: 1, 
+                  opacity: 1, 
+                  y: -30 - Math.random() * 20,
+                  x: (Math.random() - 0.5) * 20
+                }}
+                exit={{ 
+                  scale: 0, 
+                  opacity: 0 
+                }}
+                transition={{ 
+                  duration: 0.8,
+                  delay: i * 0.05,
+                  ease: "easeOut"
+                }}
+              />
+            ))}
+          </motion.div>
+        )}
+      </AnimatePresence>
 
-            {/* Trail effect */}
-            <line
-              x1="-10"
-              y1="50"
-              x2="110"
-              y2="40"
-              stroke="rgba(59, 130, 246, 0.6)"
-              strokeWidth="0.1"
-              className="slash-trail"
-            />
-          </svg>
-        </div>
-      )}
-
-      {phase === "cut" && (
-        <div className="absolute inset-0 z-10 pointer-events-none">
-          {[...Array(12)].map((_, i) => (
-            <div
-              key={i}
-              className="spark absolute bg-yellow-400 rounded-full"
-              style={{
-                width: Math.random() * 4 + 2 + "px",
-                height: Math.random() * 4 + 2 + "px",
-                top: "50%",
-                left: 20 + i * 6 + "%",
-                transform: `translate(-50%, -50%)`,
-                animationName: `spark-${i % 4}`,
-                animationDuration: "0.8s",
-                animationTimingFunction: "ease-out",
-                animationFillMode: "forwards",
-                animationDelay: `${i * 0.03}s`,
-              }}
-            />
-          ))}
-        </div>
-      )}
-
+      {/* Content with Cut Effect */}
       <div className="relative">
-        {phase === "cut" || phase === "separated" ? (
+        {phase === "idle" || phase === "slash" ? (
+          <motion.div 
+            className="transition-all duration-200"
+            animate={phase === "slash" ? { filter: "brightness(1.1)" } : {}}
+            transition={{ duration: 0.2 }}
+          >
+            {children}
+          </motion.div>
+        ) : (
           <div className="relative">
-            <div
-              className="absolute inset-0 cut-half-top"
+            {/* Top Half */}
+            <motion.div 
+              className="absolute inset-0 overflow-hidden"
               style={{
-                clipPath: "polygon(0 0, 100% 0, 100% 50%, 0 50%)",
-                animationName: phase === "cut" ? "cut-top-separate" : "none",
-                animationDuration: phase === "cut" ? "0.8s" : "0s",
-                animationTimingFunction: phase === "cut" ? "cubic-bezier(0.25, 0.46, 0.45, 0.94)" : "ease",
-                animationFillMode: phase === "cut" ? "forwards" : "none",
-                animationDelay: phase === "cut" ? "0.1s" : "0s",
-                transform: phase === "separated" ? "translateY(-30px) rotate(-1deg)" : "none",
+                clipPath: "polygon(0 0, 100% 0, 100% 50%, 0 50%)"
+              }}
+              animate={phase === "separated" ? {
+                y: -30,
+                rotate: -1,
+                transition: { duration: 0.8, ease: "easeOut" }
+              } : {}}
+            >
+              {children}
+            </motion.div>
+            
+            {/* Bottom Half */}
+            <div 
+              className="absolute inset-0 overflow-hidden"
+              style={{
+                clipPath: "polygon(0 50%, 100% 50%, 100% 100%, 0 100%)"
               }}
             >
               {children}
             </div>
 
-            <div
-              className="absolute inset-0 cut-half-bottom"
-              style={{
-                clipPath: "polygon(0 50%, 100% 50%, 100% 100%, 0 100%)",
-                transform: "none",
-              }}
-            >
-              {children}
-            </div>
-
+            {/* Invisible content for layout */}
             <div className="opacity-0">{children}</div>
           </div>
-        ) : (
-          <div className={cn("transition-all duration-200", phase === "slash" && "brightness-110")}>{children}</div>
         )}
       </div>
-
-      <style jsx>{`
-        .slash-outer-glow {
-          stroke-dasharray: 120;
-          stroke-dashoffset: 120;
-          animation: slash-glow-outer 0.6s ease-out forwards;
-        }
-
-        .slash-main {
-          stroke-dasharray: 120;
-          stroke-dashoffset: 120;
-          animation: slash-draw 0.6s ease-out forwards;
-        }
-
-        .slash-glow {
-          stroke-dasharray: 120;
-          stroke-dashoffset: 120;
-          animation: slash-glow-draw 0.6s ease-out forwards;
-        }
-
-        .slash-trail {
-          stroke-dasharray: 120;
-          stroke-dashoffset: 120;
-          animation: slash-trail 0.6s ease-out forwards;
-        }
-
-        @keyframes slash-glow-outer {
-          0% {
-            stroke-dashoffset: 120;
-            opacity: 0;
-          }
-          20% {
-            stroke-dashoffset: 80;
-            opacity: 0.4;
-          }
-          60% {
-            stroke-dashoffset: 20;
-            opacity: 0.6;
-          }
-          100% {
-            stroke-dashoffset: -40;
-            opacity: 0;
-          }
-        }
-
-        @keyframes slash-glow-draw {
-          0% {
-            stroke-dashoffset: 120;
-            opacity: 0;
-          }
-          25% {
-            stroke-dashoffset: 70;
-            opacity: 0.8;
-          }
-          65% {
-            stroke-dashoffset: 10;
-            opacity: 1;
-          }
-          100% {
-            stroke-dashoffset: -50;
-            opacity: 0;
-          }
-        }
-
-        @keyframes slash-draw {
-          0% {
-            stroke-dashoffset: 120;
-            opacity: 0;
-          }
-          30% {
-            stroke-dashoffset: 60;
-            opacity: 1;
-          }
-          70% {
-            stroke-dashoffset: 0;
-            opacity: 1;
-          }
-          100% {
-            stroke-dashoffset: -60;
-            opacity: 0;
-          }
-        }
-
-        @keyframes slash-trail {
-          0% {
-            stroke-dashoffset: 120;
-            opacity: 0;
-          }
-          20% {
-            stroke-dashoffset: 80;
-            opacity: 0.8;
-          }
-          60% {
-            stroke-dashoffset: 20;
-            opacity: 0.6;
-          }
-          100% {
-            stroke-dashoffset: -40;
-            opacity: 0;
-          }
-        }
-
-        @keyframes cut-top-separate {
-          0% {
-            transform: translateY(0) rotate(0deg);
-            opacity: 1;
-          }
-          100% {
-            transform: translateY(-30px) rotate(-1deg);
-            opacity: 1;
-          }
-        }
-
-        @keyframes spark-0 {
-          0% { transform: translate(-50%, -50%) rotate(0deg) translateY(0); opacity: 1; }
-          100% { transform: translate(-50%, -50%) rotate(0deg) translateY(-50px); opacity: 0; }
-        }
-
-        @keyframes spark-1 {
-          0% { transform: translate(-50%, -50%) rotate(45deg) translateY(0); opacity: 1; }
-          100% { transform: translate(-50%, -50%) rotate(45deg) translateY(-45px); opacity: 0; }
-        }
-
-        @keyframes spark-2 {
-          0% { transform: translate(-50%, -50%) rotate(90deg) translateY(0); opacity: 1; }
-          100% { transform: translate(-50%, -50%) rotate(90deg) translateY(-40px); opacity: 0; }
-        }
-
-        @keyframes spark-3 {
-          0% { transform: translate(-50%, -50%) rotate(135deg) translateY(0); opacity: 1; }
-          100% { transform: translate(-50%, -50%) rotate(135deg) translateY(-42px); opacity: 0; }
-        }
-      `}</style>
     </div>
   )
 }
