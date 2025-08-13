@@ -3,53 +3,82 @@
 import { motion } from "framer-motion";
 import Image from "next/image";
 import Link from "next/link";
-import MDXContent from "../../components/mdx-content";
-import { useBackgroundChanger } from "../../components/use-background-changer";
+import { useEffect, useState } from "react";
+import FFXIVInteractive from "../../components/ffxiv-interactive";
+import FFXIVBackgroundWrapper from "../../components/ffxiv-background-wrapper";
+
+// Custom components that can be used in MDX
+const components = {
+  h1: (props: any) => (
+    <h1 className="text-4xl font-bold text-white mb-6 border-b border-purple-400/30 pb-4" {...props} />
+  ),
+  h2: (props: any) => (
+    <h2 className="text-3xl font-semibold text-white mt-12 mb-6 text-purple-300" {...props} />
+  ),
+  h3: (props: any) => (
+    <h3 className="text-2xl font-semibold text-white mt-8 mb-4 text-purple-200" {...props} />
+  ),
+  p: (props: any) => (
+    <p className="text-lg text-white/90 leading-relaxed mb-4" {...props} />
+  ),
+  ul: (props: any) => (
+    <ul className="list-disc list-inside text-lg text-white/90 leading-relaxed mb-4 space-y-2" {...props} />
+  ),
+  ol: (props: any) => (
+    <ol className="list-decimal list-inside text-lg text-white/90 leading-relaxed mb-4 space-y-2" {...props} />
+  ),
+  li: (props: any) => (
+    <li className="text-lg text-white/90 leading-relaxed" {...props} />
+  ),
+  blockquote: (props: any) => (
+    <blockquote className="border-l-4 border-purple-400 pl-6 py-4 my-6 bg-purple-900/20 rounded-r-lg italic text-white/80" {...props} />
+  ),
+  strong: (props: any) => (
+    <strong className="text-purple-300 font-semibold" {...props} />
+  ),
+  em: (props: any) => (
+    <em className="text-purple-200 italic" {...props} />
+  ),
+  hr: (props: any) => (
+    <hr className="border-purple-400/30 my-8" {...props} />
+  ),
+};
 
 export default function FFXIVPage() {
-  // Define background sections based on scroll progress through the lore
-  const backgroundSections = [
-    {
-      id: "character-title",
-      background: "from-slate-900 via-purple-900 to-slate-900", // Default
-      threshold: 0
-    },
-    {
-      id: "origins",
-      background: "from-amber-900 via-orange-800 to-red-900", // Warm desert colors for Ul'dah section
-      threshold: 0.15
-    },
-    {
-      id: "call-to-adventure",
-      background: "from-red-900 via-purple-800 to-indigo-900", // Dramatic colors for adventure section
-      threshold: 0.3
-    },
-    {
-      id: "relationships",
-      background: "from-blue-900 via-cyan-800 to-teal-900", // Cool colors for relationships section
-      threshold: 0.45
-    },
-    {
-      id: "character-development",
-      background: "from-emerald-900 via-green-800 to-lime-900", // Growth colors for development section
-      threshold: 0.6
-    },
-    {
-      id: "personal-philosophy",
-      background: "from-violet-900 via-purple-800 to-fuchsia-900", // Philosophical colors
-      threshold: 0.75
-    },
-    {
-      id: "future-aspirations",
-      background: "from-indigo-900 via-blue-800 to-cyan-900", // Future/hope colors
-      threshold: 0.9
-    }
-  ];
+  const [Part1Component, setPart1Component] = useState<any>(null);
+  const [Part2Component, setPart2Component] = useState<any>(null);
+  const [loading, setLoading] = useState(true);
 
-  const currentBackground = useBackgroundChanger(backgroundSections);
+  useEffect(() => {
+    async function loadMDXContent() {
+      try {
+        // Dynamic imports to load MDX content
+        const part1Module = await import('../../content/ffxiv-lore-part1.mdx');
+        const part2Module = await import('../../content/ffxiv-lore-part2.mdx');
+        
+        // Extract the default export content
+        setPart1Component(() => part1Module.default);
+        setPart2Component(() => part2Module.default);
+        setLoading(false);
+      } catch (error) {
+        console.error('Error loading MDX content:', error);
+        setLoading(false);
+      }
+    }
+
+    loadMDXContent();
+  }, []);
+
+  if (loading) {
+    return (
+      <div className="min-h-screen bg-black flex items-center justify-center">
+        <div className="text-white text-xl">Loading character story...</div>
+      </div>
+    );
+  }
 
   return (
-    <div className="min-h-screen bg-black overflow-hidden">
+    <FFXIVBackgroundWrapper>
       {/* Top black bar */}
       <motion.div 
         className="h-16 bg-black"
@@ -60,7 +89,7 @@ export default function FFXIVPage() {
       
       {/* Main content area */}
       <motion.div 
-        className={`min-h-[calc(100vh-8rem)] p-8 pb-20 gap-8 sm:p-20 transition-all duration-1000 ease-in-out bg-gradient-to-br ${currentBackground}`}
+        className="min-h-[calc(100vh-8rem)] p-8 pb-20 gap-8 sm:p-20 transition-all duration-1000 ease-in-out"
         initial={{ opacity: 0, scale: 0.95 }}
         animate={{ opacity: 1, scale: 1 }}
         transition={{ duration: 1, ease: "easeOut", delay: 0.3 }}
@@ -95,118 +124,18 @@ export default function FFXIVPage() {
               Character Lore & Story
             </h2>
             
-            {/* MDX Content */}
-            <MDXContent>
-              <div className="text-lg text-white/90 leading-relaxed">
-                <h1>The Tale of [Character Name]</h1>
-                
-                <h2>Origins</h2>
-                <p>
-                  Born in the bustling city of <strong>Ul'dah</strong>, [Character Name] was raised among the merchant class, 
-                  learning the value of both coin and cunning from an early age. The desert winds carried whispers of ancient magic, 
-                  and young [Character Name] would often sneak away from their studies to listen to the tales of traveling adventurers.
-                </p>
-                
-                <blockquote>
-                  <em>"Every coin has two sides, and every story has a beginning."</em> - Their grandfather's favorite saying
-                </blockquote>
-                
-                <h2>The Call to Adventure</h2>
-                
-                <h3>The First Sign</h3>
-                <p>
-                  It was during the <strong>Calamity</strong> that [Character Name] first felt the pull of destiny. As the sky burned red 
-                  and the earth trembled, they discovered an ancient tome hidden in their family's basement - a grimoire that would change everything.
-                </p>
-                
-                <h3>The Journey Begins</h3>
-                <p>
-                  Leaving behind the safety of Ul'dah, [Character Name] set out to become a <strong>Warrior of Light</strong>, 
-                  though they didn't know it at the time. Their first steps were guided by:
-                </p>
-                
-                <ul>
-                  <li><strong>Curiosity</strong> - An insatiable desire to understand the world</li>
-                  <li><strong>Courage</strong> - The bravery to face the unknown</li>
-                  <li><strong>Compassion</strong> - A heart that couldn't ignore suffering</li>
-                </ul>
-                
-                <h2>Key Relationships</h2>
-                
-                <h3>Allies & Friends</h3>
-                <p>
-                  <strong>Alphinaud Leveilleur</strong> - A mentor figure who helped [Character Name] understand their role in the grand scheme of things. 
-                  Their relationship is built on mutual respect and shared ideals.
-                </p>
-                <p>
-                  <strong>Y'shtola Rhul</strong> - A mysterious ally whose knowledge of the arcane has saved [Character Name] more than once. 
-                  Their bond is one of intellectual curiosity and mutual danger.
-                </p>
-                
-                <h3>Rivals & Enemies</h3>
-                <p>
-                  <strong>Ascian Emissary</strong> - A shadowy figure who represents everything [Character Name] fights against. 
-                  Their confrontations are always tense, filled with philosophical debates about the nature of existence.
-                </p>
-                
-                <h2>Character Development</h2>
-                
-                <h3>Early Struggles</h3>
-                <p>
-                  In the beginning, [Character Name] was naive and idealistic. They believed that good would always triumph over evil, 
-                  that justice was simple and clear-cut.
-                </p>
-                
-                <h3>Growth Through Adversity</h3>
-                <p>
-                  The <strong>Crystal Tower</strong> incident taught them that reality is far more complex. Sometimes the greatest evil 
-                  comes from good intentions, and sometimes the greatest good requires difficult choices.
-                </p>
-                
-                <h3>Current State</h3>
-                <p>
-                  Today, [Character Name] is a seasoned adventurer who understands that the world exists in shades of gray. They've learned to:
-                </p>
-                
-                <ul>
-                  <li><strong>Question everything</strong> - Even their own motivations</li>
-                  <li><strong>Seek understanding</strong> - Before passing judgment</li>
-                  <li><strong>Stand firm</strong> - When the path ahead is unclear</li>
-                </ul>
-                
-                <h2>Personal Philosophy</h2>
-                <p>
-                  [Character Name] believes in the power of <strong>choice and consequence</strong>. Every action ripples outward, 
-                  affecting not just the individual but the world around them. This philosophy guides their decisions and shapes their relationships.
-                </p>
-                
-                <h3>Core Beliefs</h3>
-                <ol>
-                  <li><strong>Knowledge is power</strong> - But wisdom is knowing how to use it</li>
-                  <li><strong>Strength comes from unity</strong> - No one fights alone</li>
-                  <li><strong>Change is inevitable</strong> - But growth is a choice</li>
-                </ol>
-                
-                <h2>Future Aspirations</h2>
-                
-                <h3>Short-term Goals</h3>
-                <ul>
-                  <li>Master the advanced techniques of their chosen class</li>
-                  <li>Forge stronger bonds with their allies</li>
-                  <li>Uncover the truth behind recent mysterious events</li>
-                </ul>
-                
-                <h3>Long-term Vision</h3>
-                <p>
-                  [Character Name] dreams of a world where people can choose their own destiny, free from the manipulations of ancient forces. 
-                  They want to build something lasting - not just defeat enemies, but create a foundation for <strong>future generations</strong>.
-                </p>
-                
-                <hr />
-                
-                <p><em>This is the story so far, but every day brings new challenges and opportunities for growth. The tale of [Character Name] is still being written...</em></p>
-              </div>
-            </MDXContent>
+            {/* First Part of the Story - Before the Cut */}
+            <div className="mb-8">
+              {Part1Component && <Part1Component components={components} />}
+            </div>
+
+            {/* Sword Cut Effect Component - Inserted in the middle of the story */}
+            <FFXIVInteractive />
+
+            {/* Second Part of the Story - After the Cut */}
+            <div className="mt-8">
+              {Part2Component && <Part2Component components={components} />}
+            </div>
           </div>
         </motion.section>
 
@@ -382,6 +311,6 @@ export default function FFXIVPage() {
         animate={{ y: 0 }}
         transition={{ duration: 0.8, ease: "easeOut" }}
       />
-    </div>
+    </FFXIVBackgroundWrapper>
   );
 }

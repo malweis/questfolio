@@ -1,15 +1,24 @@
 import type { NextConfig } from "next";
-import createMDX from '@next/mdx';
-
-const withMDX = createMDX({
-  options: {
-    remarkPlugins: [],
-    rehypePlugins: [],
-  },
-});
 
 const nextConfig: NextConfig = {
-  pageExtensions: ['js', 'jsx', 'mdx', 'ts', 'tsx'],
+  webpack: (config) => {
+    config.module.rules.push({
+      test: /\.mdx?$/,
+      use: [
+        {
+          loader: '@mdx-js/loader',
+          options: {
+            jsx: true,
+          },
+        },
+      ],
+    });
+    
+    return config;
+  },
+  experimental: {
+    mdxRs: true,
+  },
 };
 
-export default withMDX(nextConfig);
+export default nextConfig;
