@@ -3,7 +3,7 @@
 import { motion } from "framer-motion";
 import Image from "next/image";
 import Link from "next/link";
-import { useEffect, useState, createContext, useContext } from "react";
+import { useEffect, useState, createContext, useContext, lazy, Suspense } from "react";
 import FFXIVInteractive from "../../components/ffxiv-interactive";
 import FFXIVBackgroundWrapper from "../../components/ffxiv-background-wrapper";
 import { SwordCutEffect } from "../../components/sword-cut-effect";
@@ -15,6 +15,12 @@ const SoundContext = createContext({
 });
 
 export const useSoundContext = () => useContext(SoundContext);
+
+// Lazy load heavy sections for better performance
+const LazyCharacterImages = lazy(() => import('../../components/character-images-section'));
+const LazyCharacterDetails = lazy(() => import('../../components/character-details-section'));
+const LazyCharacterTraits = lazy(() => import('../../components/character-traits-section'));
+const LazyCharacterRelationships = lazy(() => import('../../components/character-relationships-section'));
 
 // Custom components that can be used in MDX
 const components = {
@@ -65,9 +71,11 @@ export default function FFXIVPage() {
   useEffect(() => {
     async function loadMDXContent() {
       try {
-        // Dynamic imports to load MDX content
-        const part1Module = await import('../../content/ffxiv-lore-part1.mdx');
-        const part2Module = await import('../../content/ffxiv-lore-part2.mdx');
+        // Use Promise.all for parallel loading - basic optimization
+        const [part1Module, part2Module] = await Promise.all([
+          import('../../content/ffxiv-lore-part1.mdx'),
+          import('../../content/ffxiv-lore-part2.mdx')
+        ]);
         
         // Extract the default export content
         setPart1Component(() => part1Module.default);
@@ -240,168 +248,112 @@ export default function FFXIVPage() {
             </SwordCutEffect>
           </motion.section>
 
-          {/* Secondary Sections - Grid Layout */}
+          {/* Secondary Sections - Grid Layout with Lazy Loading */}
           <div className="max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-2 gap-8">
             
-            {/* Character Images Section */}
-            <motion.section 
-              className="bg-black/30 backdrop-blur-sm rounded-2xl p-8 border border-white/10"
-              initial={{ opacity: 0, x: -50 }}
-              animate={{ opacity: 1, x: 0 }}
-              transition={{ delay: 0.9 }}
-            >
-              <h2 className="text-2xl font-bold text-white mb-6 flex items-center gap-3">
-                <span className="w-2 h-6 bg-purple-400 rounded-full"></span>
-                Character Images
-              </h2>
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
-                <div className="space-y-4">
-                  <div className="aspect-[4/5] bg-gray-800 rounded-xl flex items-center justify-center border-2 border-dashed border-white/20">
-                    <div className="text-center text-white/50">
-                      <div className="text-4xl mb-2">📸</div>
-                      <p>Main Portrait</p>
-                      <p className="text-sm">Upload your character's main image</p>
-                    </div>
+            {/* Character Images Section - Lazy Loaded */}
+            <Suspense fallback={
+              <motion.section 
+                className="bg-black/30 backdrop-blur-sm rounded-2xl p-8 border border-white/10"
+                initial={{ opacity: 0, x: -50 }}
+                animate={{ opacity: 1, x: 0 }}
+                transition={{ delay: 0.9 }}
+              >
+                <div className="animate-pulse">
+                  <div className="h-6 bg-gray-700 rounded mb-6"></div>
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
+                    <div className="aspect-[4/5] bg-gray-800 rounded-xl"></div>
+                    <div className="aspect-[4/5] bg-gray-800 rounded-xl"></div>
                   </div>
-                  <p className="text-white/70 text-center text-sm">Main Portrait</p>
                 </div>
-                <div className="space-y-4">
-                  <div className="aspect-[4/5] bg-gray-800 rounded-xl flex items-center justify-center border-2 border-dashed border-white/20">
-                    <div className="text-center text-white/50">
-                      <div className="text-4xl mb-2">🎭</div>
-                      <p>Action Shot</p>
-                      <p className="text-sm">In combat or adventure</p>
-                    </div>
-                  </div>
-                  <p className="text-white/70 text-center text-sm">Action Shot</p>
-                </div>
-              </div>
-            </motion.section>
+              </motion.section>
+            }>
+              <LazyCharacterImages />
+            </Suspense>
 
-            {/* Character Details Section */}
-            <motion.section 
-              className="bg-black/30 backdrop-blur-sm rounded-2xl p-8 border border-white/10"
-              initial={{ opacity: 0, x: 50 }}
-              animate={{ opacity: 1, x: 0 }}
-              transition={{ delay: 0.8 }}
-            >
-              <h2 className="text-3xl font-bold text-white mb-6 flex items-center gap-3">
-                <span className="w-2 h-6 bg-purple-400 rounded-full"></span>
-                Character Details
-              </h2>
-              <div className="space-y-4 text-sm">
-                <div className="flex justify-between">
-                  <span className="text-white/70">Race:</span>
-                  <span className="text-white">Hyur</span>
+            {/* Character Details Section - Lazy Loaded */}
+            <Suspense fallback={
+              <motion.section 
+                className="bg-black/30 backdrop-blur-sm rounded-2xl p-8 border border-white/10"
+                initial={{ opacity: 0, x: 50 }}
+                animate={{ opacity: 1, x: 0 }}
+                transition={{ delay: 0.8 }}
+              >
+                <div className="animate-pulse">
+                  <div className="h-6 bg-gray-700 rounded mb-6"></div>
+                  <div className="space-y-4">
+                    {[...Array(5)].map((_, i) => (
+                      <div key={i} className="flex justify-between">
+                        <div className="h-4 bg-gray-700 rounded w-20"></div>
+                        <div className="h-4 bg-gray-700 rounded w-16"></div>
+                      </div>
+                    ))}
+                  </div>
                 </div>
-                <div className="flex justify-between">
-                  <span className="text-white/70">Class:</span>
-                  <span className="text-white">Warrior</span>
-                </div>
-                <div className="flex justify-between">
-                  <span className="text-white/70">Level:</span>
-                  <span className="text-white">90</span>
-                </div>
-                <div className="flex justify-between">
-                  <span className="text-white/70">Server:</span>
-                  <span className="text-white">Crystal</span>
-                </div>
-                <div className="flex justify-between">
-                  <span className="text-white/70">Free Company:</span>
-                  <span className="text-white">Company Name</span>
-                </div>
-              </div>
-            </motion.section>
+              </motion.section>
+            }>
+              <LazyCharacterDetails />
+            </Suspense>
           </div>
 
-          {/* Additional Sections - Single Column */}
+          {/* Additional Sections - Single Column with Lazy Loading */}
           <div className="max-w-4xl mx-auto mt-8">
             
-            {/* Character Traits & Goals */}
-            <motion.section 
-              className="bg-black/30 backdrop-blur-sm rounded-2xl p-8 border border-white/10 mb-8"
-              initial={{ opacity: 0, y: 30 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 1.0 }}
-            >
-              <h2 className="text-2xl font-bold text-white mb-6 flex items-center gap-3">
-                <span className="w-2 h-6 bg-purple-400 rounded-full"></span>
-                Personality & Goals
-              </h2>
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-                <div>
-                  <h3 className="text-xl font-semibold text-white mb-4">Personality Traits</h3>
-                  <div className="space-y-3">
-                    <div className="bg-white/5 rounded-lg p-3">
-                      <h4 className="font-medium text-white text-sm">Brave</h4>
-                      <p className="text-white/70 text-xs">Faces challenges head-on</p>
+            {/* Character Traits & Goals - Lazy Loaded */}
+            <Suspense fallback={
+              <motion.section 
+                className="bg-black/30 backdrop-blur-sm rounded-2xl p-8 border border-white/10 mb-8"
+                initial={{ opacity: 0, y: 30 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 1.0 }}
+              >
+                <div className="animate-pulse">
+                  <div className="h-6 bg-gray-700 rounded mb-6"></div>
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+                    <div className="space-y-4">
+                      {[...Array(3)].map((_, i) => (
+                        <div key={i} className="bg-gray-700 rounded-lg p-3 h-20"></div>
+                      ))}
                     </div>
-                    <div className="bg-white/5 rounded-lg p-3">
-                      <h4 className="font-medium text-white text-sm">Loyal</h4>
-                      <p className="text-white/70 text-xs">Devoted to friends and causes</p>
-                    </div>
-                    <div className="bg-white/5 rounded-lg p-3">
-                      <h4 className="font-medium text-white text-sm">Curious</h4>
-                      <p className="text-white/70 text-xs">Always seeking knowledge</p>
+                    <div className="space-y-4">
+                      {[...Array(3)].map((_, i) => (
+                        <div key={i} className="bg-gray-700 rounded-lg p-3 h-20"></div>
+                      ))}
                     </div>
                   </div>
                 </div>
-                <div>
-                  <h3 className="text-xl font-semibold text-white mb-4">Goals & Aspirations</h3>
-                  <div className="space-y-3">
-                    <div className="bg-white/5 rounded-lg p-3">
-                      <h4 className="font-medium text-white text-sm">Master the Warrior Arts</h4>
-                      <p className="text-white/70 text-xs">Become the ultimate protector</p>
-                    </div>
-                    <div className="bg-white/5 rounded-lg p-3">
-                      <h4 className="font-medium text-white text-sm">Explore Ancient Ruins</h4>
-                      <p className="text-white/70 text-xs">Uncover lost knowledge</p>
-                    </div>
-                    <div className="bg-white/5 rounded-lg p-3">
-                      <h4 className="font-medium text-white text-sm">Build a Strong Community</h4>
-                      <p className="text-white/70 text-xs">Help others grow stronger</p>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </motion.section>
+              </motion.section>
+            }>
+              <LazyCharacterTraits />
+            </Suspense>
 
-            {/* Character Relationships */}
-            <motion.section 
-              className="bg-black/30 backdrop-blur-sm rounded-2xl p-8 border border-white/10"
-              initial={{ opacity: 0, y: 30 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 1.1 }}
-            >
-              <h2 className="text-2xl font-bold text-white mb-6 flex items-center gap-3">
-                <span className="w-2 h-6 bg-purple-400 rounded-full"></span>
-                Relationships & Connections
-              </h2>
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-                <div>
-                  <h3 className="text-xl font-semibold text-white mb-4">Allies & Friends</h3>
-                  <div className="space-y-3">
-                    <div className="bg-white/5 rounded-lg p-4">
-                      <h4 className="font-medium text-white">Alphinaud Leveilleur</h4>
-                      <p className="text-white/70 text-sm">Mentor figure and trusted ally</p>
+            {/* Character Relationships - Lazy Loaded */}
+            <Suspense fallback={
+              <motion.section 
+                className="bg-black/30 backdrop-blur-sm rounded-2xl p-8 border border-white/10"
+                initial={{ opacity: 0, y: 30 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 1.1 }}
+              >
+                <div className="animate-pulse">
+                  <div className="h-6 bg-gray-700 rounded mb-6"></div>
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+                    <div className="space-y-4">
+                      {[...Array(2)].map((_, i) => (
+                        <div key={i} className="bg-gray-700 rounded-lg p-4 h-24"></div>
+                      ))}
                     </div>
-                    <div className="bg-white/5 rounded-lg p-4">
-                      <h4 className="font-medium text-white">Y'shtola Rhul</h4>
-                      <p className="text-white/70 text-sm">Mysterious ally with arcane knowledge</p>
+                    <div className="space-y-4">
+                      {[...Array(1)].map((_, i) => (
+                        <div key={i} className="bg-gray-700 rounded-lg p-4 h-24"></div>
+                      ))}
                     </div>
                   </div>
                 </div>
-                <div>
-                  <h3 className="text-xl font-semibold text-white mb-4">Rivals & Enemies</h3>
-                  <div className="space-y-3">
-                    <div className="bg-white/5 rounded-lg p-4">
-                      <h4 className="font-medium text-white">Ascian Emissary</h4>
-                      <p className="text-white/70 text-sm">Shadowy figure representing ancient forces</p>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </motion.section>
+              </motion.section>
+            }>
+              <LazyCharacterRelationships />
+            </Suspense>
           </div>
         </motion.div>
         
