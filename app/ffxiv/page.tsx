@@ -7,6 +7,10 @@ import { useEffect, useState, createContext, useContext } from "react";
 import FFXIVInteractive from "../../components/ffxiv-interactive";
 import FFXIVBackgroundWrapper from "../../components/ffxiv-background-wrapper";
 import { SwordCutEffect } from "../../components/sword-cut-effect";
+import LightningAnimation from "../../components/lightning-animation";
+import StormTrigger from "../../components/storm-trigger";
+import FullStorySection from "../../components/full-story-section";
+import { AnimatePresence } from "framer-motion";
 
 // Sound Context for global sound control
 const SoundContext = createContext({
@@ -61,6 +65,7 @@ export default function FFXIVPage() {
   const [resetTrigger, setResetTrigger] = useState(false);
   const [hasTriggered, setHasTriggered] = useState(false);
   const [soundEnabled, setSoundEnabled] = useState(true);
+  const [stormTriggered, setStormTriggered] = useState(false);
 
   useEffect(() => {
     async function loadMDXContent() {
@@ -92,6 +97,17 @@ export default function FFXIVPage() {
     setHasTriggered(false);
     // Reset the trigger after a short delay
     setTimeout(() => setResetTrigger(false), 100);
+  };
+
+  const handleStormTriggered = () => {
+    setStormTriggered(true);
+  };
+
+  const handleStormReset = () => {
+    setStormTriggered(false);
+    setHasTriggered(false);
+    setManualTrigger(false);
+    setResetTrigger(false);
   };
 
   const toggleSound = () => {
@@ -151,93 +167,36 @@ export default function FFXIVPage() {
             </motion.button>
           </motion.div>
 
-          {/* Main Lore Section - Full Width with Sword Cut Effect */}
+          {/* Main Lore Section - Storm Trigger Flow */}
           <motion.section 
             className="max-w-6xl mx-auto mb-16 relative"
             initial={{ opacity: 0, y: 30 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.7 }}
           >
-            <SwordCutEffect 
-              manualTrigger={manualTrigger}
-              resetTrigger={resetTrigger}
-              className="w-full"
-            >
-              <div className="bg-black/30 backdrop-blur-sm rounded-2xl p-8 sm:p-12 border border-white/10">
-                <h2 className="text-3xl font-bold text-white mb-8 flex items-center gap-3">
-                  <span className="w-2 h-8 bg-purple-400 rounded-full"></span>
-                  Character Lore & Story
-                </h2>
-                
-                {/* Test Button for Sword Cut Effect */}
-                <div className="mb-6 text-center">
-                  <button
-                    onClick={handleStartAnimation}
-                    disabled={hasTriggered}
-                    className="px-4 py-2 bg-red-600 hover:bg-red-700 disabled:bg-gray-500 disabled:cursor-not-allowed text-white font-bold rounded-lg shadow-lg transition-colors duration-200"
-                  >
-                    🗡️ Test Sword Cut Effect
-                  </button>
-                  {hasTriggered && (
-                    <button
-                      onClick={handleResetAnimation}
-                      className="ml-4 px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white font-bold rounded-lg shadow-lg transition-colors duration-200"
-                    >
-                      🔄 Reset
-                    </button>
-                  )}
-                </div>
-                
-                {/* First Part of the Story - Before the Cut */}
-                <div className="mb-8">
-                  {Part1Component && <Part1Component components={components} />}
-                </div>
-
-                {/* Control Buttons */}
-                <div className="bg-gradient-to-r from-red-500/20 to-purple-600/20 p-6 rounded-lg border border-white/20 my-12">
-                  <div className="text-center">
-                    <h3 className="text-2xl font-bold text-white mb-4">The Great Divide</h3>
-                    <p className="text-white/80 mb-6">
-                      At this moment in the story, a great challenge awaits. The path forward is unclear, 
-                      and only through decisive action can the tale continue...
-                    </p>
-                    
-                    {/* Sword Cut Control Buttons */}
-                    <div className="flex justify-center gap-4">
-                      <button
-                        onClick={handleStartAnimation}
-                        disabled={hasTriggered}
-                        className="px-6 py-3 bg-red-600 hover:bg-red-700 disabled:bg-gray-500 disabled:cursor-not-allowed text-white font-bold rounded-lg shadow-lg transition-colors duration-200 flex items-center gap-2"
-                      >
-                        🗡️ Cut Through the Challenge
-                      </button>
-                      <button
-                        onClick={handleResetAnimation}
-                        disabled={!hasTriggered}
-                        className="px-6 py-3 bg-blue-600 hover:bg-blue-700 disabled:bg-gray-500 disabled:cursor-not-allowed text-white font-bold rounded-lg shadow-lg transition-colors duration-200 flex items-center gap-2"
-                      >
-                        🔄 Restore Unity
-                      </button>
-                    </div>
-
-                    {/* Immersive Description */}
-                    <div className="text-center mt-4">
-                      <p className="text-white/60 text-sm italic">
-                        {hasTriggered 
-                          ? "The story has been cut in half! The two pieces remain separated, creating a lasting visual impact." 
-                          : "Click the button above to dramatically cut the story section in half with a sword effect!"
-                        }
-                      </p>
-                    </div>
-                  </div>
-                </div>
-
-                {/* Second Part of the Story - After the Cut */}
-                <div className="mt-8">
-                  {Part2Component && <Part2Component components={components} />}
-                </div>
-              </div>
-            </SwordCutEffect>
+            <AnimatePresence mode="wait">
+              {!stormTriggered ? (
+                <StormTrigger
+                  key="storm-trigger"
+                  onStormTriggered={handleStormTriggered}
+                  onReset={handleStormReset}
+                  Part1Component={Part1Component}
+                  components={components}
+                />
+              ) : (
+                <FullStorySection
+                  key="full-story"
+                  Part1Component={Part1Component}
+                  Part2Component={Part2Component}
+                  components={components}
+                  manualTrigger={manualTrigger}
+                  resetTrigger={resetTrigger}
+                  hasTriggered={hasTriggered}
+                  onStartAnimation={handleStartAnimation}
+                  onResetAnimation={handleResetAnimation}
+                />
+              )}
+            </AnimatePresence>
           </motion.section>
 
           {/* Secondary Sections - Grid Layout */}
@@ -309,6 +268,43 @@ export default function FFXIVPage() {
                 <div className="flex justify-between">
                   <span className="text-white/70">Free Company:</span>
                   <span className="text-white">Company Name</span>
+                </div>
+              </div>
+            </motion.section>
+
+            {/* Character Relationships */}
+            <motion.section 
+              className="bg-black/30 backdrop-blur-sm rounded-2xl p-8 border border-white/10"
+              initial={{ opacity: 0, y: 30 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 1.1 }}
+            >
+              <h2 className="text-2xl font-bold text-white mb-6 flex items-center gap-3">
+                <span className="w-2 h-6 bg-purple-400 rounded-full"></span>
+                Relationships & Connections
+              </h2>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+                <div>
+                  <h3 className="text-xl font-semibold text-white mb-4">Allies & Friends</h3>
+                  <div className="space-y-3">
+                    <div className="bg-white/5 rounded-lg p-4">
+                      <h4 className="font-medium text-white">Alphinaud Leveilleur</h4>
+                      <p className="text-white/70 text-sm">Mentor figure and trusted ally</p>
+                    </div>
+                    <div className="bg-white/5 rounded-lg p-4">
+                      <h4 className="font-medium text-white">Y'shtola Rhul</h4>
+                      <p className="text-white/70 text-sm">Mysterious ally with arcane knowledge</p>
+                    </div>
+                  </div>
+                </div>
+                <div>
+                  <h3 className="text-xl font-semibold text-white mb-4">Rivals & Enemies</h3>
+                  <div className="space-y-3">
+                    <div className="bg-white/5 rounded-lg p-4">
+                      <h4 className="font-medium text-white">Ascian Emissary</h4>
+                      <p className="text-white/70 text-sm">Shadowy figure representing ancient forces</p>
+                    </div>
+                  </div>
                 </div>
               </div>
             </motion.section>

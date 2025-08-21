@@ -197,13 +197,9 @@ export function SwordCutEffect({
       {/* Content with Cut Effect */}
       <div className="relative">
         {phase === "idle" || phase === "slash" ? (
-          <motion.div 
-            className="transition-all duration-200"
-            animate={phase === "slash" ? { filter: "brightness(1.1)" } : {}}
-            transition={{ duration: 0.2 }}
-          >
+          <div>
             {children}
-          </motion.div>
+          </div>
         ) : (
           <div className="relative">
             {/* Top Half */}
