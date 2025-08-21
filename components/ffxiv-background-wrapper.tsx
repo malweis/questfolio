@@ -4,9 +4,10 @@ import { useBackgroundChanger } from "./use-background-changer";
 
 interface BackgroundWrapperProps {
   children: React.ReactNode;
+  stormTriggered?: boolean;
 }
 
-export default function FFXIVBackgroundWrapper({ children }: BackgroundWrapperProps) {
+export default function FFXIVBackgroundWrapper({ children, stormTriggered = false }: BackgroundWrapperProps) {
   // Define background sections based on scroll progress through the lore
   const backgroundSections = [
     {
@@ -49,7 +50,33 @@ export default function FFXIVBackgroundWrapper({ children }: BackgroundWrapperPr
   const currentBackground = useBackgroundChanger(backgroundSections);
 
   return (
-    <div className={`min-h-screen bg-black overflow-hidden bg-gradient-to-br ${currentBackground}`}>
+    <div className={`min-h-screen bg-black overflow-hidden bg-gradient-to-br ${currentBackground} relative`}>
+      {/* Rain Effect - Appears when storm is triggered */}
+      {stormTriggered && (
+        <div className="fixed inset-0 pointer-events-none z-0">
+          {Array.from({ length: 100 }).map((_, i) => {
+            const duration = Math.random() * 1 + 1.5;
+            const delay = Math.random() * 2;
+            const left = Math.random() * 100;
+            const height = Math.random() * 100 + 50;
+            const startTop = -(height + 50);
+            
+            return (
+              <div
+                key={i}
+                className="absolute w-0.5 bg-gradient-to-b from-blue-200/60 via-blue-300/40 to-transparent rain-drop"
+                style={{
+                  left: `${left}%`,
+                  height: `${height}px`,
+                  top: `${startTop}px`,
+                  animation: `rain ${duration}s linear infinite`,
+                  animationDelay: `${delay}s`,
+                }}
+              />
+            );
+          })}
+        </div>
+      )}
       {children}
     </div>
   );

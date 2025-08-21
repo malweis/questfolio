@@ -109,6 +109,8 @@ export default function FFXIVPage() {
 
   const handleStormTriggered = () => {
     setStormTriggered(true);
+    // Scroll to top when storm is triggered to show the beginning of the new component
+    window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
   const handleStormReset = () => {
@@ -132,7 +134,7 @@ export default function FFXIVPage() {
 
   return (
     <SoundContext.Provider value={{ soundEnabled, toggleSound }}>
-      <FFXIVBackgroundWrapper>
+      <FFXIVBackgroundWrapper stormTriggered={stormTriggered}>
         {/* Top black bar */}
         <motion.div 
           className="h-16 bg-black"
