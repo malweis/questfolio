@@ -5,7 +5,7 @@ import { useEffect, useState } from "react"
 import { motion, AnimatePresence } from "framer-motion"
 import useSound from "use-sound"
 import { cn } from "@/lib/utils"
-import { useSoundContext } from "../app/ffxiv/page"
+import { useSound as useSoundContext } from "./sound-context"
 
 interface SwordCutEffectProps {
   children: React.ReactNode
@@ -24,35 +24,35 @@ export function SwordCutEffect({
 }: SwordCutEffectProps) {
   const [phase, setPhase] = useState<"idle" | "slash" | "cut" | "separated">("idle")
   const [animationKey, setAnimationKey] = useState(0)
-  const { soundEnabled } = useSoundContext()
+  const { hasSoundConsent } = useSoundContext()
 
   // Sound effects using use-sound
   const [playSlash] = useSound('/sounds/sword-slash.mp3', { 
     volume: 0.6,
     playbackRate: 1.0,
     interrupt: true,
-    soundEnabled: soundEnabled
+    soundEnabled: hasSoundConsent
   })
   
   const [playCut] = useSound('/sounds/sword-cut.mp3', { 
     volume: 0.7,
     playbackRate: 1.0,
     interrupt: true,
-    soundEnabled: soundEnabled
+    soundEnabled: hasSoundConsent
   })
   
   const [playSeparate] = useSound('/sounds/content-separate.mp3', { 
     volume: 0.5,
     playbackRate: 0.9,
     interrupt: true,
-    soundEnabled: soundEnabled
+    soundEnabled: hasSoundConsent
   })
 
   useEffect(() => {
     if (manualTrigger && phase === "idle") {
       setPhase("slash")
       // Play slash sound immediately if sound is enabled
-      if (soundEnabled) {
+      if (hasSoundConsent) {
         playSlash()
       }
       
@@ -60,7 +60,7 @@ export function SwordCutEffect({
         console.log("Moving to cut phase")
         setPhase("cut")
         // Play cut sound if sound is enabled
-        if (soundEnabled) {
+        if (hasSoundConsent) {
           playCut()
         }
       }, 600)
@@ -69,13 +69,13 @@ export function SwordCutEffect({
         console.log("Moving to separated phase")
         setPhase("separated")
         // Play separation sound if sound is enabled
-        if (soundEnabled) {
+        if (hasSoundConsent) {
           playSeparate()
         }
         onTriggerComplete?.()
       }, 1200)
     }
-  }, [manualTrigger, phase, onTriggerComplete, playSlash, playCut, playSeparate, soundEnabled])
+  }, [manualTrigger, phase, onTriggerComplete, playSlash, playCut, playSeparate, hasSoundConsent])
 
   useEffect(() => {
     if (resetTrigger) {

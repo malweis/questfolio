@@ -3,7 +3,7 @@
 import { motion } from "framer-motion";
 import Image from "next/image";
 import Link from "next/link";
-import { useEffect, useState, createContext, useContext, lazy, Suspense } from "react";
+import { useEffect, useState, lazy, Suspense } from "react";
 import FFXIVInteractive from "../../components/ffxiv-interactive";
 import FFXIVBackgroundWrapper from "../../components/ffxiv-background-wrapper";
 import { SwordCutEffect } from "../../components/sword-cut-effect";
@@ -11,14 +11,9 @@ import LightningAnimation from "../../components/lightning-animation";
 import StormTrigger from "../../components/storm-trigger";
 import FullStorySection from "../../components/full-story-section";
 import { AnimatePresence } from "framer-motion";
-
-// Sound Context for global sound control
-const SoundContext = createContext({
-  soundEnabled: true,
-  toggleSound: () => {},
-});
-
-export const useSoundContext = () => useContext(SoundContext);
+import { SoundProvider, useSound } from "../../components/sound-context";
+import SoundConsentOverlay from "../../components/sound-consent-overlay";
+import FloatingSoundToggle from "../../components/floating-sound-toggle";
 
 // Lazy load heavy sections for better performance
 const LazyCharacterImages = lazy(() => import('../../components/character-images-section'));
@@ -63,7 +58,7 @@ const components = {
   ),
 };
 
-export default function FFXIVPage() {
+function FFXIVPageContent() {
   const [Part1Component, setPart1Component] = useState<any>(null);
   const [Part2Component, setPart2Component] = useState<any>(null);
   const [loading, setLoading] = useState(true);
@@ -72,6 +67,13 @@ export default function FFXIVPage() {
   const [hasTriggered, setHasTriggered] = useState(false);
   const [soundEnabled, setSoundEnabled] = useState(true);
   const [stormTriggered, setStormTriggered] = useState(false);
+  const { hasSoundConsent, setSoundConsent } = useSound();
+  const [showConsent, setShowConsent] = useState(false);
+
+  useEffect(() => {
+    // Show consent overlay when the page loads
+    setShowConsent(true);
+  }, []);
 
   useEffect(() => {
     async function loadMDXContent() {
@@ -124,6 +126,11 @@ export default function FFXIVPage() {
     setSoundEnabled(prev => !prev);
   };
 
+  const handleConsent = () => {
+    setSoundConsent(true);
+    setShowConsent(false);
+  };
+
   if (loading) {
     return (
       <div className="min-h-screen bg-black flex items-center justify-center">
@@ -133,7 +140,7 @@ export default function FFXIVPage() {
   }
 
   return (
-    <SoundContext.Provider value={{ soundEnabled, toggleSound }}>
+    <>
       <FFXIVBackgroundWrapper stormTriggered={stormTriggered}>
         {/* Top black bar */}
         <motion.div 
@@ -326,6 +333,20 @@ export default function FFXIVPage() {
           transition={{ duration: 0.8, ease: "easeOut" }}
         />
       </FFXIVBackgroundWrapper>
-    </SoundContext.Provider>
+
+      {/* Sound Consent Overlay - Only show when needed */}
+      {showConsent && <SoundConsentOverlay onConsent={handleConsent} />}
+      
+      {/* Floating Sound Toggle - Always visible on FFXIV page */}
+      <FloatingSoundToggle />
+    </>
+  );
+}
+
+export default function FFXIVPage() {
+  return (
+    <SoundProvider>
+      <FFXIVPageContent />
+    </SoundProvider>
   );
 }
