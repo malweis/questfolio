@@ -72,10 +72,13 @@ export default function StormTrigger({ onStormTriggered, onReset, Part1Component
 
   const handleStormClick = () => {
     if (animationState !== "idle") return
-    
+      //play the sound
+      const audio = new Audio('/sounds/thunder.mp3');
+      audio.play();
     setIsClicked(true)
     setLightningPaths(generateLightningPaths())
     setAnimationState("lightning")
+  
 
     // Lightning strikes for 0.3s
     setTimeout(() => {
