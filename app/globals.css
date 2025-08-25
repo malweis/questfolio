@@ -25,6 +25,296 @@
   backface-visibility: hidden;
 }
 
+/* Added custom animations for punch effects */
+@layer utilities {
+  /* Screen shake animation */
+  @keyframes screen-shake {
+    0%,
+    100% {
+      transform: translate(0, 0) rotate(0deg);
+    }
+    10% {
+      transform: translate(-2px, -1px) rotate(-0.5deg);
+    }
+    20% {
+      transform: translate(2px, 1px) rotate(0.5deg);
+    }
+    30% {
+      transform: translate(-1px, 2px) rotate(-0.3deg);
+    }
+    40% {
+      transform: translate(1px, -2px) rotate(0.3deg);
+    }
+    50% {
+      transform: translate(-2px, 1px) rotate(-0.2deg);
+    }
+    60% {
+      transform: translate(2px, -1px) rotate(0.2deg);
+    }
+    70% {
+      transform: translate(-1px, -2px) rotate(-0.1deg);
+    }
+    80% {
+      transform: translate(1px, 2px) rotate(0.1deg);
+    }
+    90% {
+      transform: translate(-1px, -1px) rotate(-0.05deg);
+    }
+  }
+
+  .animate-screen-shake {
+    animation: screen-shake 0.5s ease-in-out infinite;
+  }
+
+  /* Punch impact animations */
+  @keyframes punch-impact {
+    0% {
+      transform: scale(0) rotate(0deg);
+      opacity: 0;
+    }
+    20% {
+      transform: scale(1.2) rotate(5deg);
+      opacity: 0.8;
+    }
+    40% {
+      transform: scale(0.8) rotate(-3deg);
+      opacity: 0.6;
+    }
+    60% {
+      transform: scale(1.1) rotate(2deg);
+      opacity: 0.4;
+    }
+    80% {
+      transform: scale(0.9) rotate(-1deg);
+      opacity: 0.2;
+    }
+    100% {
+      transform: scale(0) rotate(0deg);
+      opacity: 0;
+    }
+  }
+
+  .animate-punch-1 {
+    animation: punch-impact 0.8s ease-out 0.2s both;
+  }
+
+  .animate-punch-2 {
+    animation: punch-impact 0.8s ease-out 0.6s both;
+  }
+
+  .animate-punch-3 {
+    animation: punch-impact 0.8s ease-out 1.0s both;
+  }
+
+  .animate-punch-4 {
+    animation: punch-impact 0.8s ease-out 1.4s both;
+  }
+
+  /* Fast pulse for punch impacts */
+  @keyframes pulse-fast {
+    0%,
+    100% {
+      opacity: 0.3;
+    }
+    50% {
+      opacity: 0.8;
+    }
+  }
+
+  .animate-pulse-fast {
+    animation: pulse-fast 0.2s ease-in-out infinite;
+  }
+
+  /* Screen crack animations */
+  @keyframes crack-appear {
+    0% {
+      transform: scaleY(0);
+      opacity: 0;
+    }
+    50% {
+      transform: scaleY(0.5);
+      opacity: 0.8;
+    }
+    100% {
+      transform: scaleY(1);
+      opacity: 0.6;
+    }
+  }
+
+  .animate-crack-1 {
+    animation: crack-appear 0.3s ease-out 0.8s both;
+  }
+
+  .animate-crack-2 {
+    animation: crack-appear 0.3s ease-out 1.2s both;
+    transform-origin: left;
+  }
+
+  .animate-crack-3 {
+    animation: crack-appear 0.3s ease-out 1.6s both;
+  }
+
+  /* Full-screen eyelid blinking animations */
+  /* Eyelid animations for full-screen eye blink effect */
+  @keyframes eyelid-close-top {
+    0% {
+      transform: scaleY(0);
+    }
+    30% {
+      transform: scaleY(0.8);
+    }
+    50% {
+      transform: scaleY(1);
+    }
+    70% {
+      transform: scaleY(1);
+    }
+    100% {
+      transform: scaleY(0);
+    }
+  }
+
+  @keyframes eyelid-close-bottom {
+    0% {
+      transform: scaleY(0);
+    }
+    30% {
+      transform: scaleY(0.8);
+    }
+    50% {
+      transform: scaleY(1);
+    }
+    70% {
+      transform: scaleY(1);
+    }
+    100% {
+      transform: scaleY(0);
+    }
+  }
+
+  /* Multiple eyelid blinks to simulate fainting effect */
+  @keyframes eyelid-multiple-top {
+    0% {
+      transform: scaleY(0);
+    }
+    8% {
+      transform: scaleY(0.6);
+    }
+    12% {
+      transform: scaleY(0);
+    }
+    20% {
+      transform: scaleY(0.7);
+    }
+    25% {
+      transform: scaleY(0);
+    }
+    35% {
+      transform: scaleY(0.8);
+    }
+    42% {
+      transform: scaleY(0);
+    }
+    55% {
+      transform: scaleY(0.9);
+    }
+    65% {
+      transform: scaleY(0);
+    }
+    75% {
+      transform: scaleY(1);
+    }
+    95% {
+      transform: scaleY(1);
+    }
+    100% {
+      transform: scaleY(0);
+    }
+  }
+
+  @keyframes eyelid-multiple-bottom {
+    0% {
+      transform: scaleY(0);
+    }
+    8% {
+      transform: scaleY(0.6);
+    }
+    12% {
+      transform: scaleY(0);
+    }
+    20% {
+      transform: scaleY(0.7);
+    }
+    25% {
+      transform: scaleY(0);
+    }
+    35% {
+      transform: scaleY(0.8);
+    }
+    42% {
+      transform: scaleY(0);
+    }
+    55% {
+      transform: scaleY(0.9);
+    }
+    65% {
+      transform: scaleY(0);
+    }
+    75% {
+      transform: scaleY(1);
+    }
+    95% {
+      transform: scaleY(1);
+    }
+    100% {
+      transform: scaleY(0);
+    }
+  }
+
+  .animate-eyelid-top {
+    animation: eyelid-close-top 2.5s ease-in-out 1.8s both;
+  }
+
+  .animate-eyelid-bottom {
+    animation: eyelid-close-bottom 2.5s ease-in-out 1.8s both;
+  }
+
+  /* New animation classes for multiple blinks */
+  .animate-eyelid-top-multiple {
+    animation: eyelid-multiple-top 8s ease-in-out 0.5s both;
+  }
+
+  .animate-eyelid-bottom-multiple {
+    animation: eyelid-multiple-bottom 8s ease-in-out 0.5s both;
+  }
+
+  /* Screen flash effect */
+  @keyframes screen-flash {
+    0% {
+      opacity: 0;
+    }
+    5% {
+      opacity: 0.3;
+    }
+    10% {
+      opacity: 0;
+    }
+    15% {
+      opacity: 0.2;
+    }
+    20% {
+      opacity: 0;
+    }
+    100% {
+      opacity: 0;
+    }
+  }
+
+  .animate-screen-flash {
+    animation: screen-flash 2s ease-out both;
+  }
+}
+
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);

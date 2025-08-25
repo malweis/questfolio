@@ -1,19 +1,15 @@
 "use client";
 
 import { motion } from "framer-motion";
-import Image from "next/image";
 import Link from "next/link";
 import { useEffect, useState, lazy, Suspense } from "react";
-import FFXIVInteractive from "../../components/ffxiv-interactive";
 import FFXIVBackgroundWrapper from "../../components/ffxiv-background-wrapper";
-import { SwordCutEffect } from "../../components/sword-cut-effect";
-import LightningAnimation from "../../components/lightning-animation";
-import StormTrigger from "../../components/storm-trigger";
 import FullStorySection from "../../components/full-story-section";
 import { AnimatePresence } from "framer-motion";
 import { SoundProvider, useSound } from "../../components/sound-context";
 import SoundConsentOverlay from "../../components/sound-consent-overlay";
 import FloatingSoundToggle from "../../components/floating-sound-toggle";
+import PunchEffectComponent from "../../components/punch-effect-component";
 
 // Lazy load heavy sections for better performance
 const LazyCharacterImages = lazy(() => import('../../components/character-images-section'));
@@ -66,7 +62,7 @@ function DamianPageContent() {
   const [resetTrigger, setResetTrigger] = useState(false);
   const [hasTriggered, setHasTriggered] = useState(false);
   const [soundEnabled, setSoundEnabled] = useState(true);
-  const [stormTriggered, setStormTriggered] = useState(false);
+  const [punchTriggered, setPunchTriggered] = useState(false);
   const { hasSoundConsent, setSoundConsent } = useSound();
   const [showConsent, setShowConsent] = useState(false);
 
@@ -109,14 +105,14 @@ function DamianPageContent() {
     setTimeout(() => setResetTrigger(false), 100);
   };
 
-  const handleStormTriggered = () => {
-    setStormTriggered(true);
-    // Scroll to top when storm is triggered to show the beginning of the new component
+  const handlePunchTriggered = () => {
+    setPunchTriggered(true);
+    // Scroll to top when punch is triggered to show the beginning of the new component
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
-  const handleStormReset = () => {
-    setStormTriggered(false);
+  const handlePunchReset = () => {
+    setPunchTriggered(false);
     setHasTriggered(false);
     setManualTrigger(false);
     setResetTrigger(false);
@@ -141,7 +137,7 @@ function DamianPageContent() {
 
   return (
     <>
-      <FFXIVBackgroundWrapper stormTriggered={stormTriggered}>
+      <FFXIVBackgroundWrapper stormTriggered={punchTriggered}>
         {/* Top black bar */}
         <motion.div 
           className="h-16 bg-black"
@@ -171,12 +167,12 @@ function DamianPageContent() {
               ← Back to Home
             </Link>
             <h1 className="text-4xl sm:text-6xl font-bold text-white mb-4">Damian</h1>
-            <p className="text-xl text-white/80 max-w-2xl mx-auto">Race • Class • Server</p>
+            <p className="text-xl text-white/80 max-w-2xl mx-auto">Shadow Walker • Blood Moon Born</p>
             
             {/* Sound Toggle Button */}
             <motion.button
               onClick={toggleSound}
-              className="mt-4 px-4 py-2 bg-purple-600 hover:bg-purple-700 text-white font-semibold rounded-lg transition-colors duration-200 flex items-center gap-2 mx-auto"
+              className="mt-4 px-4 py-4 bg-purple-600 hover:bg-purple-700 text-white font-semibold rounded-lg transition-colors duration-200 flex items-center gap-2 mx-auto"
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.95 }}
             >
@@ -184,7 +180,7 @@ function DamianPageContent() {
             </motion.button>
           </motion.div>
 
-          {/* Main Lore Section - Storm Trigger Flow */}
+          {/* Main Lore Section - Punch Effect Flow */}
           <motion.section 
             className="max-w-6xl mx-auto mb-16 relative"
             initial={{ opacity: 0, y: 30 }}
@@ -192,14 +188,28 @@ function DamianPageContent() {
             transition={{ delay: 0.7 }}
           >
             <AnimatePresence mode="wait">
-              {!stormTriggered ? (
-                <StormTrigger
-                  key="storm-trigger"
-                  onStormTriggered={handleStormTriggered}
-                  onReset={handleStormReset}
-                  Part1Component={Part1Component}
-                  components={components}
-                />
+              {!punchTriggered ? (
+                <div className="max-w-4xl mx-auto">
+                  {/* First Part Content */}
+                  <motion.section 
+                    className="bg-black/30 backdrop-blur-sm rounded-2xl p-8 border border-white/10 mb-8"
+                    initial={{ opacity: 0, y: 20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ duration: 0.8 }}
+                  >
+                    <div className="prose prose-invert max-w-none">
+                      {Part1Component && <Part1Component components={components} />}
+                    </div>
+                  </motion.section>
+                  
+                  {/* Punch Effect Component */}
+                  <PunchEffectComponent
+                    onPunchTriggered={handlePunchTriggered}
+                    onReset={handlePunchReset}
+                    Part1Component={Part1Component}
+                    components={components}
+                  />
+                </div>
               ) : (
                 <FullStorySection
                   key="full-story"
