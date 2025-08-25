@@ -58,7 +58,7 @@ const components = {
   ),
 };
 
-function FFXIVPageContent() {
+function DamianPageContent() {
   const [Part1Component, setPart1Component] = useState<any>(null);
   const [Part2Component, setPart2Component] = useState<any>(null);
   const [loading, setLoading] = useState(true);
@@ -80,8 +80,8 @@ function FFXIVPageContent() {
       try {
         // Use Promise.all for parallel loading - basic optimization
         const [part1Module, part2Module] = await Promise.all([
-          import('../../content/ffxiv-lore-part1.mdx'),
-          import('../../content/ffxiv-lore-part2.mdx')
+          import('../../content/damian-lore-part1.mdx'),
+          import('../../content/damian-lore-part2.mdx')
         ]);
         
         // Extract the default export content
@@ -170,7 +170,7 @@ function FFXIVPageContent() {
             >
               ← Back to Home
             </Link>
-            <h1 className="text-4xl sm:text-6xl font-bold text-white mb-4">FFXIV Character</h1>
+            <h1 className="text-4xl sm:text-6xl font-bold text-white mb-4">Damian</h1>
             <p className="text-xl text-white/80 max-w-2xl mx-auto">Race • Class • Server</p>
             
             {/* Sound Toggle Button */}
@@ -337,16 +337,16 @@ function FFXIVPageContent() {
       {/* Sound Consent Overlay - Only show when needed */}
       {showConsent && <SoundConsentOverlay onConsent={handleConsent} />}
       
-      {/* Floating Sound Toggle - Always visible on FFXIV page */}
+      {/* Floating Sound Toggle - Always visible on Damian page */}
       <FloatingSoundToggle />
     </>
   );
 }
 
-export default function FFXIVPage() {
+export default function DamianPage() {
   return (
     <SoundProvider>
-      <FFXIVPageContent />
+      <DamianPageContent />
     </SoundProvider>
   );
 }

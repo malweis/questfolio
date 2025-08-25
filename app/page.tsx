@@ -24,24 +24,53 @@ export default function Home() {
       >
         <main className="flex flex-col gap-[32px] row-start-2 items-center sm:items-start ">
           
-        
+          {/* Title */}
+          <motion.h1 
+            className="text-4xl sm:text-6xl font-bold text-white text-center sm:text-left"
+            initial={{ opacity: 0, y: -20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.5 }}
+          >
+            Character Stories
+          </motion.h1>
+          
+          <motion.p 
+            className="text-xl text-white/80 text-center sm:text-left max-w-2xl"
+            initial={{ opacity: 0, y: -20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.6 }}
+          >
+            Explore the rich lore and backgrounds of characters from different worlds and stories.
+          </motion.p>
 
-          <div className="flex gap-4 items-center flex-col sm:flex-row">
+          {/* Navigation Buttons */}
+          <motion.div 
+            className="flex gap-4 items-center flex-col sm:flex-row"
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.7 }}
+          >
             <Link
               className="rounded-full border border-solid border-transparent transition-colors flex items-center justify-center bg-primary text-background gap-2 hover:bg-[#383838] dark:hover:bg-[#ccc] font-medium text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 sm:w-auto md:w-[158px]"
               href="/ffxiv"
             >
-              FFXIV
+              FFXIV Character
+            </Link>
+            <Link
+              className="rounded-full border border-solid border-transparent transition-colors flex items-center justify-center bg-primary text-background gap-2 hover:bg-[#383838] dark:hover:bg-[#ccc] font-medium text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 sm:w-auto md:w-[158px]"
+              href="/damian"
+            >
+              Damian
             </Link>
             <a
               className="rounded-full border border-solid border-black/[.08] dark:border-white/[.145] transition-colors flex items-center bg-primary text-background justify-center hover:bg-[#f2f2f2] dark:hover:bg-[#1a1a1a] hover:border-transparent font-medium text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 w-full sm:w-auto md:w-[158px]"
-              href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
+              href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
               target="_blank"
               rel="noopener noreferrer"
             >
               DND
             </a>
-          </div>
+          </motion.div>
         </main>
         <footer className="row-start-3 flex gap-[24px] flex-wrap items-center justify-center">
           <a
