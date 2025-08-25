@@ -2,6 +2,8 @@
 
 import { useState } from "react"
 import { motion, AnimatePresence } from "framer-motion"
+import ScrollImage from "./scroll-image"
+import { useSound } from "./sound-context"
 
 interface StormTriggerProps {
   onStormTriggered: () => void
@@ -15,6 +17,7 @@ export default function StormTrigger({ onStormTriggered, onReset, Part1Component
   const [isClicked, setIsClicked] = useState(false)
   const [animationState, setAnimationState] = useState<"idle" | "lightning" | "burning" | "disintegrating" | "complete">("idle")
   const [lightningPaths, setLightningPaths] = useState<string[]>([])
+  const { hasSoundConsent } = useSound()
 
   // Generate realistic branching lightning paths
   const generateLightningPaths = () => {
@@ -72,9 +75,13 @@ export default function StormTrigger({ onStormTriggered, onReset, Part1Component
 
   const handleStormClick = () => {
     if (animationState !== "idle") return
-      //play the sound
+    
+    // Play the sound only if user has consented
+    if (hasSoundConsent) {
       const audio = new Audio('/sounds/thunder.mp3');
-      audio.play();
+      audio.play().catch(() => {}); // Ignore any playback errors
+    }
+    
     setIsClicked(true)
     setLightningPaths(generateLightningPaths())
     setAnimationState("lightning")
@@ -123,6 +130,16 @@ export default function StormTrigger({ onStormTriggered, onReset, Part1Component
         <div className="mb-8">
           {Part1Component && <Part1Component components={components} />}
         </div>
+
+        {/* Scroll Image - Visual Aid Before the Storm */}
+        <ScrollImage
+          src="/assets/next.svg"
+          alt="The calm before the storm"
+          soundSrc="/sounds/thunder.mp3"
+          caption="A moment of peace before chaos erupts"
+          className="my-12 max-w-lg mx-auto"
+          delay={0.1}
+        />
 
         {/* Storm Trigger Section */}
         <div className="text-center py-8 relative">
