@@ -3,8 +3,26 @@
 import Image from "next/image";
 import { motion } from "framer-motion";
 import Link from "next/link";
+import useSound from "use-sound";
 
 export default function Home() {
+  // Button sound effects - different sound for each button
+  const [playFFXIVSound] = useSound("/sounds/button01.mp3.flac", { volume: 0.6 });
+  const [playDamianSound] = useSound("/sounds/button02.mp3.flac", { volume: 0.6 });
+  const [playDNDSound] = useSound("/sounds/button03.mp3.flac", { volume: 0.6 });
+
+  // Sound handler functions
+  const handleFFXIVClick = () => {
+    playFFXIVSound();
+  };
+
+  const handleDamianClick = () => {
+    playDamianSound();
+  };
+
+  const handleDNDClick = () => {
+    playDNDSound();
+  };
   return (
     <div className="min-h-screen bg-black overflow-hidden">
       {/* Top black bar */}
@@ -45,30 +63,87 @@ export default function Home() {
 
           {/* Navigation Buttons */}
           <motion.div 
-            className="flex gap-4 items-center flex-col sm:flex-row"
+            className="flex gap-6 items-center flex-col sm:flex-row"
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.7 }}
           >
             <Link
-              className="rounded-full border border-solid border-transparent transition-colors flex items-center justify-center bg-primary text-background gap-2 hover:bg-[#383838] dark:hover:bg-[#ccc] font-medium text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 sm:w-auto md:w-[158px]"
+              className="group relative transition-transform duration-200 hover:scale-105"
               href="/ffxiv"
+              onClick={handleFFXIVClick}
             >
-              FFXIV Character
+              <div className="relative">
+                <Image
+                  src="/assets/buttons/buttonStock1.png"
+                  alt="FFXIV Character Button"
+                  width={200}
+                  height={80}
+                  className="transition-opacity duration-200 group-hover:opacity-0"
+                />
+                <Image
+                  src="/assets/buttons/buttonStock1h.png"
+                  alt="FFXIV Character Button Hover"
+                  width={200}
+                  height={80}
+                  className="absolute inset-0 opacity-0 transition-opacity duration-200 group-hover:opacity-100"
+                />
+                <div className="absolute inset-0 flex items-center justify-center">
+                  <span className="text-white font-bold text-lg drop-shadow-lg">FFXIV Character</span>
+                </div>
+              </div>
             </Link>
             <Link
-              className="rounded-full border border-solid border-transparent transition-colors flex items-center justify-center bg-primary text-background gap-2 hover:bg-[#383838] dark:hover:bg-[#ccc] font-medium text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 sm:w-auto md:w-[158px]"
+              className="group relative transition-transform duration-200 hover:scale-105"
               href="/damian"
+              onClick={handleDamianClick}
             >
-              Damian
+              <div className="relative">
+                <Image
+                  src="/assets/buttons/buttonStock1.png"
+                  alt="Damian Button"
+                  width={200}
+                  height={80}
+                  className="transition-opacity duration-200 group-hover:opacity-0"
+                />
+                <Image
+                  src="/assets/buttons/buttonStock1h.png"
+                  alt="Damian Button Hover"
+                  width={200}
+                  height={80}
+                  className="absolute inset-0 opacity-0 transition-opacity duration-200 group-hover:opacity-100"
+                />
+                <div className="absolute inset-0 flex items-center justify-center">
+                  <span className="text-white font-bold text-lg drop-shadow-lg">Damian</span>
+                </div>
+              </div>
             </Link>
             <a
-              className="rounded-full border border-solid border-black/[.08] dark:border-white/[.145] transition-colors flex items-center bg-primary text-background justify-center hover:bg-[#f2f2f2] dark:hover:bg-[#1a1a1a] hover:border-transparent font-medium text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 w-full sm:w-auto md:w-[158px]"
+              className="group relative transition-transform duration-200 hover:scale-105"
               href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
               target="_blank"
               rel="noopener noreferrer"
+              onClick={handleDNDClick}
             >
-              DND
+              <div className="relative">
+                <Image
+                  src="/assets/buttons/buttonStock1.png"
+                  alt="DND Button"
+                  width={200}
+                  height={80}
+                  className="transition-opacity duration-200 group-hover:opacity-0"
+                />
+                <Image
+                  src="/assets/buttons/buttonStock1h.png"
+                  alt="DND Button Hover"
+                  width={200}
+                  height={80}
+                  className="absolute inset-0 opacity-0 transition-opacity duration-200 group-hover:opacity-100"
+                />
+                <div className="absolute inset-0 flex items-center justify-center">
+                  <span className="text-white font-bold text-lg drop-shadow-lg">DND</span>
+                </div>
+              </div>
             </a>
           </motion.div>
         </main>
