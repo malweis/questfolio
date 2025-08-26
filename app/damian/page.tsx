@@ -241,7 +241,7 @@ function DamianPageContent() {
             {/* Character Images Section - Lazy Loaded */}
             <Suspense fallback={
               <motion.section 
-                className="bg-black/30 backdrop-blur-sm rounded-2xl p-8 border border-white/10"
+                className="md:bg-black/30 md:backdrop-blur-sm rounded-2xl p-8 border border-white/10"
                 initial={{ opacity: 0, x: -50 }}
                 animate={{ opacity: 1, x: 0 }}
                 transition={{ delay: 0.9 }}
@@ -261,7 +261,7 @@ function DamianPageContent() {
             {/* Character Details Section - Lazy Loaded */}
             <Suspense fallback={
               <motion.section 
-                className="bg-black/30 backdrop-blur-sm rounded-2xl p-8 border border-white/10"
+                className="md:bg-black/30 md:backdrop-blur-sm rounded-2xl p-8 border border-white/10"
                 initial={{ opacity: 0, x: 50 }}
                 animate={{ opacity: 1, x: 0 }}
                 transition={{ delay: 0.8 }}
@@ -289,7 +289,7 @@ function DamianPageContent() {
             {/* Character Traits & Goals - Lazy Loaded */}
             <Suspense fallback={
               <motion.section 
-                className="bg-black/30 backdrop-blur-sm rounded-2xl p-8 border border-white/10 mb-8"
+                className="md:bg-black/30 md:backdrop-blur-sm rounded-2xl p-8 border border-white/10 mb-8"
                 initial={{ opacity: 0, y: 30 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: 1.0 }}
@@ -317,7 +317,7 @@ function DamianPageContent() {
             {/* Character Relationships - Lazy Loaded */}
             <Suspense fallback={
               <motion.section 
-                className="bg-black/30 backdrop-blur-sm rounded-2xl p-8 border border-white/10"
+                className="md:bg-black/30 md:backdrop-blur-sm rounded-2xl p-8 border border-white/10"
                 initial={{ opacity: 0, y: 30 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: 1.1 }}
