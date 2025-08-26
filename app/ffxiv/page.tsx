@@ -149,7 +149,7 @@ function FFXIVPageContent() {
       <FFXIVBackgroundWrapper stormTriggered={stormTriggered}>
         {/* Top black bar */}
         <motion.div 
-          className="h-16 bg-black"
+          className="hidden md:block h-16 bg-black"
           initial={{ y: "-100%" }}
           animate={{ y: 0 }}
           transition={{ duration: 0.8, ease: "easeOut" }}
@@ -303,7 +303,7 @@ function FFXIVPageContent() {
             {/* Character Relationships - Lazy Loaded */}
             <Suspense fallback={
               <motion.section 
-                className="md:bg-black/30 md:backdrop-blur-sm rounded-2xl p-8 border border-white/10"
+                className="bg-black/30 backdrop-blur-sm rounded-2xl p-8 border border-white/10"
                 initial={{ opacity: 0, y: 30 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: 1.1 }}
@@ -332,7 +332,7 @@ function FFXIVPageContent() {
         
         {/* Bottom black bar */}
         <motion.div 
-          className="h-16 bg-black"
+          className="hidden md:block h-16 bg-black"
           initial={{ y: "100%" }}
           animate={{ y: 0 }}
           transition={{ duration: 0.8, ease: "easeOut" }}

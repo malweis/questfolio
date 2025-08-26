@@ -149,7 +149,7 @@ function DamianPageContent() {
       <FFXIVBackgroundWrapper stormTriggered={punchTriggered}>
         {/* Top black bar */}
         <motion.div 
-          className="h-16 bg-black"
+          className="hidden md:block h-16 bg-black"
           initial={{ y: "-100%" }}
           animate={{ y: 0 }}
           transition={{ duration: 0.8, ease: "easeOut" }}
@@ -346,7 +346,7 @@ function DamianPageContent() {
         
         {/* Bottom black bar */}
         <motion.div 
-          className="h-16 bg-black"
+          className="hidden md:block h-16 bg-black"
           initial={{ y: "100%" }}
           animate={{ y: 0 }}
           transition={{ duration: 0.8, ease: "easeOut" }}

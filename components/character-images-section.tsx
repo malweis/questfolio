@@ -5,7 +5,7 @@ import { motion } from "framer-motion";
 export default function CharacterImagesSection() {
   return (
     <motion.section 
-      className="md:bg-black/30 md:backdrop-blur-sm rounded-2xl p-8 border border-white/10"
+      className="bg-black/30 backdrop-blur-sm rounded-2xl p-8 border border-white/10"
       initial={{ opacity: 0, x: -50 }}
       animate={{ opacity: 1, x: 0 }}
       transition={{ delay: 0.9 }}
