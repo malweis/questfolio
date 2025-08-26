@@ -1,17 +1,26 @@
 "use client"
 
-import { motion } from "framer-motion"
 import { SwordCutEffect } from "./sword-cut-effect"
+import { ReactNode } from "react"
+
+// TypeScript interfaces for MDX components
+interface MDXComponentProps {
+  children?: ReactNode;
+  components?: Record<string, React.ComponentType<MDXComponentProps>>;
+  [key: string]: unknown;
+}
+
+type MDXComponent = React.ComponentType<MDXComponentProps>;
 
 interface FullStorySectionProps {
-  Part1Component: any
-  Part2Component: any
-  components: any
-  manualTrigger: boolean
-  resetTrigger: boolean
-  hasTriggered: boolean
-  onStartAnimation: () => void
-  onResetAnimation: () => void
+  Part1Component?: MDXComponent;
+  Part2Component?: MDXComponent;
+  components?: Record<string, React.ComponentType<MDXComponentProps>>;
+  manualTrigger?: boolean;
+  resetTrigger?: boolean;
+  hasTriggered?: boolean;
+  onStartAnimation?: () => void;
+  onResetAnimation?: () => void;
 }
 
 export default function FullStorySection({

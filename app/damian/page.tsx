@@ -2,7 +2,7 @@
 
 import { motion } from "framer-motion";
 import Link from "next/link";
-import { useEffect, useState, lazy, Suspense } from "react";
+import { useEffect, useState, lazy, Suspense, ReactNode } from "react";
 import FFXIVBackgroundWrapper from "../../components/ffxiv-background-wrapper";
 import FullStorySection from "../../components/full-story-section";
 import { AnimatePresence } from "framer-motion";
@@ -17,53 +17,62 @@ const LazyCharacterDetails = lazy(() => import('../../components/character-detai
 const LazyCharacterTraits = lazy(() => import('../../components/character-traits-section'));
 const LazyCharacterRelationships = lazy(() => import('../../components/character-relationships-section'));
 
+// TypeScript interfaces for MDX components
+interface MDXComponentProps {
+  children?: ReactNode;
+  components?: Record<string, React.ComponentType<MDXComponentProps>>;
+  [key: string]: unknown;
+}
+
+type MDXComponent = React.ComponentType<MDXComponentProps>;
+
 // Custom components that can be used in MDX
 const components = {
-  h1: (props: any) => (
+  h1: (props: MDXComponentProps) => (
     <h1 className="text-4xl font-bold text-white mb-6 border-b border-purple-400/30 pb-4" {...props} />
   ),
-  h2: (props: any) => (
+  h2: (props: MDXComponentProps) => (
     <h2 className="text-3xl font-semibold text-white mt-12 mb-6 text-purple-300" {...props} />
   ),
-  h3: (props: any) => (
+  h3: (props: MDXComponentProps) => (
     <h3 className="text-2xl font-semibold text-white mt-8 mb-4 text-purple-200" {...props} />
   ),
-  p: (props: any) => (
+  p: (props: MDXComponentProps) => (
     <p className="text-lg text-white/90 leading-relaxed mb-4" {...props} />
   ),
-  ul: (props: any) => (
+  ul: (props: MDXComponentProps) => (
     <ul className="list-disc list-inside text-lg text-white/90 leading-relaxed mb-4 space-y-2" {...props} />
   ),
-  ol: (props: any) => (
+  ol: (props: MDXComponentProps) => (
     <ol className="list-decimal list-inside text-lg text-white/90 leading-relaxed mb-4 space-y-2" {...props} />
   ),
-  li: (props: any) => (
+  li: (props: MDXComponentProps) => (
     <li className="text-lg text-white/90 leading-relaxed" {...props} />
   ),
-  blockquote: (props: any) => (
+  blockquote: (props: MDXComponentProps) => (
     <blockquote className="border-l-4 border-purple-400 pl-6 py-4 my-6 bg-purple-900/20 rounded-r-lg italic text-white/80" {...props} />
   ),
-  strong: (props: any) => (
+  strong: (props: MDXComponentProps) => (
     <strong className="text-purple-300 font-semibold" {...props} />
   ),
-  em: (props: any) => (
+  em: (props: MDXComponentProps) => (
     <em className="text-purple-200 italic" {...props} />
   ),
-  hr: (props: any) => (
+  hr: (props: MDXComponentProps) => (
     <hr className="border-purple-400/30 my-8" {...props} />
   ),
 };
 
 function DamianPageContent() {
-  const [Part1Component, setPart1Component] = useState<any>(null);
-  const [Part2Component, setPart2Component] = useState<any>(null);
+  const [Part1Component, setPart1Component] = useState<MDXComponent | undefined>(undefined);
+  const [Part2Component, setPart2Component] = useState<MDXComponent | undefined>(undefined);
   const [loading, setLoading] = useState(true);
   const [manualTrigger, setManualTrigger] = useState(false);
   const [resetTrigger, setResetTrigger] = useState(false);
   const [hasTriggered, setHasTriggered] = useState(false);
   const [soundEnabled, setSoundEnabled] = useState(true);
   const [punchTriggered, setPunchTriggered] = useState(false);
-  const { hasSoundConsent, setSoundConsent } = useSound();
+  const { setSoundConsent } = useSound();
   const [showConsent, setShowConsent] = useState(false);
 
   useEffect(() => {

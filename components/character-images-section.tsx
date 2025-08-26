@@ -20,10 +20,12 @@ export default function CharacterImagesSection() {
             <div className="text-center text-white/50">
               <div className="text-4xl mb-2">📸</div>
               <p>Main Portrait</p>
-              <p className="text-sm">Upload your character's main image</p>
+              <p className="text-sm">Upload your character&apos;s main image</p>
             </div>
           </div>
-          <p className="text-white/70 text-center text-sm">Main Portrait</p>
+          <p className="text-lg text-white/80 text-center max-w-2xl mx-auto">
+            Every scar tells a story, every mark a memory. These aren&apos;t just images - they&apos;re windows into moments that shaped who this character has become.
+          </p>
         </div>
         <div className="space-y-4">
           <div className="aspect-[4/5] bg-gray-800 rounded-xl flex items-center justify-center border-2 border-dashed border-white/20">

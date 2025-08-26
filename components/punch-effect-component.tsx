@@ -1,20 +1,27 @@
 "use client";
 
-import { useState } from "react";
+import { ReactNode, useState } from "react";
 import { motion } from "framer-motion";
+
+// TypeScript interfaces for MDX components
+interface MDXComponentProps {
+  children?: ReactNode;
+  components?: Record<string, React.ComponentType<MDXComponentProps>>;
+  [key: string]: unknown;
+}
+
+type MDXComponent = React.ComponentType<MDXComponentProps>;
 
 interface PunchEffectComponentProps {
   onPunchTriggered: () => void;
   onReset: () => void;
-  Part1Component: any;
-  components: any;
+  Part1Component: MDXComponent | undefined;
+  components: Record<string, React.ComponentType<MDXComponentProps>>;
 }
 
 export default function PunchEffectComponent({ 
   onPunchTriggered, 
-  onReset, 
-  Part1Component, 
-  components 
+  onReset
 }: PunchEffectComponentProps) {
   const [isAnimating, setIsAnimating] = useState(false);
 
@@ -50,7 +57,7 @@ export default function PunchEffectComponent({
         >
           <h2 className="text-3xl sm:text-4xl font-bold text-white mb-6">Ready for Impact?</h2>
           <p className="text-lg text-white/80 mb-8 max-w-2xl mx-auto">
-            Damian's story is about to take a dramatic turn. Are you ready to experience the moment that changes everything?
+            Damian&apos;s story is about to take a dramatic turn. Are you ready to experience the moment that changes everything?
           </p>
           
           <div className="flex gap-4 justify-center flex-wrap">
@@ -60,7 +67,6 @@ export default function PunchEffectComponent({
               className="px-8 py-4 bg-red-600 hover:bg-red-700 disabled:bg-gray-600 text-white font-semibold rounded-lg transition-colors duration-200 text-lg"
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.95 }}
-              disabled={isAnimating}
             >
               {isAnimating ? "Taking Damage..." : "Hit Me!"}
             </motion.button>

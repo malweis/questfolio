@@ -1,15 +1,24 @@
 "use client"
 
-import { useState } from "react"
-import { motion, AnimatePresence } from "framer-motion"
-import ScrollImage from "./scroll-image"
+import { motion } from "framer-motion";
+import { useState, ReactNode } from "react";
+import ScrollImage from "./scroll-image";
 import { useSound } from "./sound-context"
 
+// TypeScript interfaces for MDX components
+interface MDXComponentProps {
+  children?: ReactNode;
+  components?: Record<string, React.ComponentType<MDXComponentProps>>;
+  [key: string]: unknown;
+}
+
+type MDXComponent = React.ComponentType<MDXComponentProps>;
+
 interface StormTriggerProps {
-  onStormTriggered: () => void
-  onReset: () => void
-  Part1Component: any
-  components: any
+  onStormTriggered: () => void;
+  onReset: () => void;
+  Part1Component?: MDXComponent;
+  components?: Record<string, React.ComponentType<MDXComponentProps>>;
 }
 
 export default function StormTrigger({ onStormTriggered, onReset, Part1Component, components }: StormTriggerProps) {
