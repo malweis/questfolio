@@ -40,26 +40,60 @@ export default function Home() {
         animate={{ opacity: 1, scale: 1 }}
         transition={{ duration: 1, ease: "easeOut", delay: 0.3 }}
       >
-        <main className="flex flex-col gap-[32px] row-start-2 items-center sm:items-start ">
+        <main className="flex flex-col gap-[32px] row-start-2 items-center justify-center text-center">
           
-          {/* Title */}
-          <motion.h1 
-            className="text-4xl sm:text-6xl font-bold text-white text-center sm:text-left"
+          {/* Title with Animated Torches */}
+          <motion.div 
+            className="flex items-center justify-center gap-6 mb-8"
             initial={{ opacity: 0, y: -20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.5 }}
           >
-            Character Stories
-          </motion.h1>
-          
-          <motion.p 
-            className="text-xl text-white/80 text-center sm:text-left max-w-2xl"
-            initial={{ opacity: 0, y: -20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.6 }}
-          >
-            Explore the rich lore and backgrounds of characters from different worlds and stories.
-          </motion.p>
+            {/* Left Torch */}
+            <motion.div
+              initial={{ scale: 0, rotate: -10 }}
+              animate={{ scale: 1, rotate: 0 }}
+              transition={{ delay: 0.7, type: "spring", stiffness: 200 }}
+            >
+              <Image
+                src="/assets/animated_torch.gif"
+                alt="Animated Torch"
+                width={80}
+                height={120}
+                className="drop-shadow-[0_0_20px_rgba(255,165,0,0.6)]"
+              />
+            </motion.div>
+            
+            {/* Title */}
+            <motion.h1 
+              className="text-4xl sm:text-6xl font-bold text-white text-center"
+              initial={{ opacity: 0, y: -20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.5 }}
+              style={{
+                fontFamily: "'Times New Roman', serif",
+                textShadow: "0 0 20px rgba(255, 215, 0, 0.8), 0 0 40px rgba(255, 165, 0, 0.4), 2px 2px 4px rgba(0, 0, 0, 0.8)",
+                letterSpacing: "0.1em"
+              }}
+            >
+              Character Stories
+            </motion.h1>
+            
+            {/* Right Torch */}
+            <motion.div
+              initial={{ scale: 0, rotate: 10 }}
+              animate={{ scale: 1, rotate: 0 }}
+              transition={{ delay: 0.7, type: "spring", stiffness: 200 }}
+            >
+              <Image
+                src="/assets/animated_torch.gif"
+                alt="Animated Torch"
+                width={80}
+                height={120}
+                className="drop-shadow-[0_0_20px_rgba(255,165,0,0.6)]"
+              />
+            </motion.div>
+          </motion.div>
 
           {/* Navigation Buttons */}
           <motion.div 
