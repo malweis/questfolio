@@ -49,7 +49,7 @@ export default function Home() {
           
           {/* Title with Animated Torches - Dungeon Style Frame */}
           <motion.div 
-            className="flex items-center justify-center gap-6 mb-8 p-12 relative"
+            className="flex items-center justify-center gap-6 mb-8 lg:p-12 relative"
             style={{
               background: 'linear-gradient(135deg, #2C2C2C, #404040, #2C2C2C)',
               border: '6px solid',
@@ -66,8 +66,7 @@ export default function Home() {
               `,
               position: 'relative',
               overflow: 'hidden',
-              minHeight: '180px',
-              minWidth: '600px'
+             
             }}
             initial={{ opacity: 0, y: -20 }}
             animate={{ opacity: 1, y: 0 }}
@@ -84,13 +83,13 @@ export default function Home() {
                 alt="Animated Torch"
                 width={80}
                 height={120}
-                className="drop-shadow-[0_0_20px_rgba(255,165,0,0.6)]"
+                className="drop-shadow-[0_0_20px_rgba(255,165,0,0.6)] "
               />
             </motion.div>
             
             {/* Title */}
             <motion.h1 
-              className="text-4xl sm:text-6xl font-bold text-white text-center"
+              className="text-3xl sm:text-6xl font-bold text-white text-center"
               initial={{ opacity: 0, y: -20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.5 }}
