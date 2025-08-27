@@ -24,7 +24,11 @@ export default function Home() {
     playDNDSound();
   };
   return (
-    <div className="min-h-screen bg-black overflow-hidden">
+    <div className="min-h-screen bg-black overflow-hidden" style={{
+      backgroundImage: 'url(/assets/wall.png)',
+      backgroundRepeat: 'repeat',
+      backgroundSize: '200px 200px'
+    }}>
       {/* Top black bar */}
       <motion.div 
         className="h-16 bg-black"
@@ -35,16 +39,35 @@ export default function Home() {
       
       {/* Main content area */}
       <motion.div 
-        className="font-sans grid grid-rows-[20px_1fr_20px] items-center justify-items-center min-h-[calc(100vh-8rem)] p-8 pb-20 gap-16 sm:p-20 bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900"
+                  className="font-sans grid grid-rows-[20px_1fr_20px] items-center justify-items-center min-h-[calc(100vh-8rem)] p-8 pb-20 gap-16 sm:p-20 transition-all duration-1000 ease-in-out relative"
         initial={{ opacity: 0, scale: 0.95 }}
         animate={{ opacity: 1, scale: 1 }}
         transition={{ duration: 1, ease: "easeOut", delay: 0.3 }}
       >
         <main className="flex flex-col gap-[32px] row-start-2 items-center justify-center text-center">
           
-          {/* Title with Animated Torches */}
+          {/* Title with Animated Torches - Dungeon Style Frame */}
           <motion.div 
-            className="flex items-center justify-center gap-6 mb-8"
+            className="flex items-center justify-center gap-6 mb-8 p-12 relative"
+            style={{
+              background: 'linear-gradient(135deg, #2C2C2C, #404040, #2C2C2C)',
+              border: '6px solid',
+              borderImage: 'linear-gradient(45deg, #8B7355, #D2B48C, #8B7355) 1',
+              borderRadius: '8px',
+              boxShadow: `
+                inset 0 0 40px rgba(0, 0, 0, 0.7),
+                inset 0 0 80px rgba(139, 115, 85, 0.1),
+                0 0 0 2px rgba(210, 180, 140, 0.3),
+                0 0 0 4px rgba(0, 0, 0, 0.9),
+                0 12px 48px rgba(0, 0, 0, 0.8),
+                0 24px 96px rgba(0, 0, 0, 0.6),
+                0 0 0 1px rgba(255, 215, 0, 0.2)
+              `,
+              position: 'relative',
+              overflow: 'hidden',
+              minHeight: '180px',
+              minWidth: '600px'
+            }}
             initial={{ opacity: 0, y: -20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.5 }}
