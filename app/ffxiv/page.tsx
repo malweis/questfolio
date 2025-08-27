@@ -10,6 +10,7 @@ import { AnimatePresence } from "framer-motion";
 import { SoundProvider, useSound } from "../../components/sound-context";
 import SoundConsentOverlay from "../../components/sound-consent-overlay";
 import FloatingSoundToggle from "../../components/floating-sound-toggle";
+import CreditsLink from "../../components/credits-link";
 
 // Lazy load heavy sections for better performance
 const LazyCharacterImages = lazy(() => import('../../components/character-images-section'));
@@ -329,6 +330,9 @@ function FFXIVPageContent() {
             </Suspense>
           </div>
         </motion.div>
+        
+        {/* Credits Section */}
+        <CreditsLink />
         
         {/* Bottom black bar */}
         <motion.div 
