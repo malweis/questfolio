@@ -2,7 +2,6 @@
 
 import { motion } from "framer-motion";
 import Link from "next/link";
-import Image from "next/image";
 
 export default function CreditsPage() {
   return (
@@ -181,7 +180,7 @@ export default function CreditsPage() {
                 To all the creators, developers, and contributors who make open source and Creative Commons possible.
               </p>
               <p className="text-white/60">
-                This project wouldn't exist without your generosity and commitment to sharing knowledge and resources.
+                This project wouldn&apos;t exist without your generosity and commitment to sharing knowledge and resources.
               </p>
             </div>
           </motion.section>
