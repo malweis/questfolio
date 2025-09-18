@@ -7,7 +7,6 @@ import { SoundProvider, useSound } from "../../../components/sound-context";
 import SoundConsentOverlay from "../../../components/sound-consent-overlay";
 import FloatingSoundToggle from "../../../components/floating-sound-toggle";
 import CreditsLink from "../../../components/credits-link";
-import Image from "next/image";
 
 // Lazy load moodboard sections
 const LazyImageGrid = lazy(() => import('../../../components/moodboard/image-grid'));
@@ -92,12 +91,12 @@ function DamianMoodboardContent() {
                   letterSpacing: "0.1em"
                 }}
               >
-                Damian's Moodboard
+                Damian&apos;s Moodboard
               </motion.h1>
             </motion.div>
             
             <p className="text-xl text-white/80 max-w-2xl mx-auto">
-              A visual collection of inspiration, colors, and themes that define Damian's character
+              A visual collection of inspiration, colors, and themes that define Damian&apos;s character
             </p>
           </motion.div>
 

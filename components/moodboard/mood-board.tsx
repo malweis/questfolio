@@ -3,7 +3,24 @@
 import { motion } from "framer-motion";
 import Image from "next/image";
 
-const moodBoardItems = [
+type MoodBoardImageItem = {
+  type: "image";
+  src: string;
+  alt: string;
+  title: string;
+  description: string;
+};
+
+type MoodBoardTextItem = {
+  type: "text";
+  title: string;
+  description: string;
+  content: string[];
+};
+
+type MoodBoardItem = MoodBoardImageItem | MoodBoardTextItem;
+
+const moodBoardItems: MoodBoardItem[] = [
   {
     type: "image",
     src: "/assets/moodboard/damian-concept.jpg",
