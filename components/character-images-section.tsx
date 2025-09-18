@@ -1,6 +1,7 @@
 "use client";
 
 import { motion } from "framer-motion";
+import Link from "next/link";
 
 export default function CharacterImagesSection() {
   return (
@@ -38,6 +39,26 @@ export default function CharacterImagesSection() {
           <p className="text-white/70 text-center text-sm">Action Shot</p>
         </div>
       </div>
+      
+      {/* Moodboard Button */}
+      <motion.div 
+        className="mt-8 text-center"
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ delay: 1.0 }}
+      >
+        <Link
+          href="/damian/moodboard"
+          className="inline-flex items-center gap-2 bg-gradient-to-r from-purple-600 to-red-600 hover:from-purple-700 hover:to-red-700 text-white font-semibold px-6 py-3 rounded-lg transition-all duration-200 transform hover:scale-105 shadow-lg"
+        >
+          <span>🎨</span>
+          View Character Moodboard
+          <span>→</span>
+        </Link>
+        <p className="text-white/60 text-sm mt-2">
+          Explore Damian&apos;s visual inspiration and themes
+        </p>
+      </motion.div>
     </motion.section>
   );
 }
