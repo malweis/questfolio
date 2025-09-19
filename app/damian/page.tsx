@@ -11,6 +11,7 @@ import SoundConsentOverlay from "../../components/sound-consent-overlay";
 import FloatingSoundToggle from "../../components/floating-sound-toggle";
 import PunchEffectComponent from "../../components/punch-effect-component";
 import CreditsLink from "../../components/credits-link";
+import { FeatherText } from "../../components/feather-text";
 
 // Lazy load heavy sections for better performance
 const LazyCharacterImages = lazy(() => import('../../components/character-images-section'));
@@ -38,6 +39,11 @@ const components = {
   h3: (props: MDXComponentProps) => (
     <h3 className="text-2xl font-semibold text-white mt-8 mb-4 text-purple-200" {...props} />
   ),
+  h4: (props: MDXComponentProps) => (
+    <FeatherText className="text-xl font-semibold text-white mt-8 mb-4 ">
+      {props.children}
+    </FeatherText>
+  ),
   p: (props: MDXComponentProps) => (
     <p className="text-lg text-white/90 leading-relaxed mb-4" {...props} />
   ),
@@ -57,7 +63,7 @@ const components = {
     <strong className="text-purple-300 font-semibold" {...props} />
   ),
   em: (props: MDXComponentProps) => (
-    <em className="text-purple-200 italic" {...props} />
+    <em className="text-purple-200 italic text-lg" {...props} />
   ),
   hr: (props: MDXComponentProps) => (
     <hr className="border-purple-400/30 my-8" {...props} />
@@ -158,7 +164,7 @@ function DamianPageContent() {
         
         {/* Main content area */}
         <motion.div 
-          className="min-h-[calc(100vh-8rem)] p-8 pb-20 gap-8 sm:p-20 transition-all duration-1000 ease-in-out"
+          className="min-h-[calc(100vh-8rem)] md:p-8 pb-20 gap-8 sm:p-20 transition-all duration-1000 ease-in-out"
           initial={{ opacity: 0, scale: 0.95 }}
           animate={{ opacity: 1, scale: 1 }}
           transition={{ duration: 1, ease: "easeOut", delay: 0.3 }}
@@ -202,7 +208,7 @@ function DamianPageContent() {
                 <div className="max-w-4xl mx-auto">
                   {/* First Part Content */}
                   <motion.section 
-                    className="bg-black/30 backdrop-blur-sm rounded-2xl p-8 border border-white/10 mb-8"
+                    className="bg-black/30 backdrop-blur-sm rounded-2xl  p-2  md:p-8 border border-white/10 mb-8 w-full"
                     initial={{ opacity: 0, y: 20 }}
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ duration: 0.8 }}
