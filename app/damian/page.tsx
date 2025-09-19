@@ -12,6 +12,7 @@ import FloatingSoundToggle from "../../components/floating-sound-toggle";
 import PunchEffectComponent from "../../components/punch-effect-component";
 import CreditsLink from "../../components/credits-link";
 import { FeatherText } from "../../components/feather-text";
+import { GlitchText } from "../../components/glitch-text";
 
 // Lazy load heavy sections for better performance
 const LazyCharacterImages = lazy(() => import('../../components/character-images-section'));
@@ -34,7 +35,11 @@ const components = {
     <h1 className="text-4xl font-bold text-white mb-6 border-b border-purple-400/30 pb-4" {...props} />
   ),
   h2: (props: MDXComponentProps) => (
-    <h2 className="text-3xl font-semibold text-white mt-12 mb-6 text-purple-300" {...props} />
+    <h2 className="text-3xl font-semibold text-white mt-12 mb-6 text-purple-300">
+      <GlitchText>
+        {props.children}
+      </GlitchText>
+    </h2>
   ),
   h3: (props: MDXComponentProps) => (
     <h3 className="text-2xl font-semibold text-white mt-8 mb-4 text-purple-200" {...props} />
