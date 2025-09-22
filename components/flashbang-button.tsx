@@ -4,6 +4,7 @@ import { useState, useEffect } from "react";
 import { motion } from "framer-motion";
 import { Button } from "@/components/ui/button";
 import { createPortal } from "react-dom";
+import { useSound } from "./sound-context";
 
 interface FlashbangButtonProps {
   onFlashbangTriggered: () => void;
@@ -17,6 +18,7 @@ export default function FlashbangButton({
   const [isFlashing, setIsFlashing] = useState(false);
   const [isMounted, setIsMounted] = useState(false);
   const [showAttention, setShowAttention] = useState(false);
+  const { playSound } = useSound();
 
   useEffect(() => {
     setIsMounted(true);
@@ -35,10 +37,14 @@ export default function FlashbangButton({
 
     setIsFlashing(true);
 
-    // After the flashbang animation completes, trigger the story change
+    // Play explosion sound immediately when triggered
+    playSound('/sounds/explotion.mp3');
+
+    // Trigger the story change during the white flash (when screen is fully white)
+    // This masks the content change behind the white overlay
     setTimeout(() => {
       onFlashbangTriggered();
-    }, 3500); // Back to original timing
+    }, 1000); // Trigger during the white flash phase
   };
 
   const handleReset = () => {

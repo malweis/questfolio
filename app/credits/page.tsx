@@ -126,6 +126,14 @@ export default function CreditsPage() {
                 <p className="text-white/60 text-sm">License: CC0 (Public Domain)</p>
                 <a href="https://opengameart.org/content/wall-texture-1" className="text-amber-400 hover:text-amber-300 text-sm">https://opengameart.org/content/wall-texture-1</a>
               </div>
+              
+              <div className="bg-white/5 rounded-lg p-6 border border-white/10">
+                <h3 className="text-xl font-semibold text-white mb-3">Explosion Sound Effect</h3>
+                <p className="text-white/80 mb-2">Principal explosion audio for flashbang effect</p>
+                <p className="text-white/60 text-sm">Author: josecruz98</p>
+                <p className="text-white/60 text-sm">License: Creative Commons 0</p>
+                <a href="https://freesound.org/s/392997/" className="text-amber-400 hover:text-amber-300 text-sm">https://freesound.org/s/392997/</a>
+              </div>
             </div>
           </motion.section>
 
