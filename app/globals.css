@@ -347,6 +347,19 @@
     animation: expandCircle 4s ease-out forwards;
   }
 
+  /* Light attention effect for interactive text */
+
+  .hot-metal-text {
+    color: #ffffff;
+    text-shadow: 0 0 5px rgba(255, 255, 255, 0.3);
+    transition: all 0.3s ease;
+  }
+
+  .hot-metal-text:hover {
+    color: #ff6b6b;
+    text-shadow: 0 0 10px rgba(255, 107, 107, 0.5), 0 0 20px rgba(255, 107, 107, 0.3);
+  }
+
   /* Feather falling animation */
   @keyframes feather-fall {
     0% {

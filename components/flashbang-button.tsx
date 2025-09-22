@@ -16,9 +16,18 @@ export default function FlashbangButton({
 }: FlashbangButtonProps) {
   const [isFlashing, setIsFlashing] = useState(false);
   const [isMounted, setIsMounted] = useState(false);
+  const [showAttention, setShowAttention] = useState(false);
 
   useEffect(() => {
     setIsMounted(true);
+    
+    // Show attention effect periodically to encourage clicking
+    const attentionInterval = setInterval(() => {
+      setShowAttention(true);
+      setTimeout(() => setShowAttention(false), 2000); // Show for 2 seconds
+    }, 4000); // Every 4 seconds
+
+    return () => clearInterval(attentionInterval);
   }, []);
 
   const triggerFlashbang = () => {
@@ -29,7 +38,7 @@ export default function FlashbangButton({
     // After the flashbang animation completes, trigger the story change
     setTimeout(() => {
       onFlashbangTriggered();
-    }, 3500); // Slightly before the 4s animation ends to ensure smooth transition
+    }, 3500); // Back to original timing
   };
 
   const handleReset = () => {
@@ -53,7 +62,9 @@ export default function FlashbangButton({
             className={`text-2xl sm:text-3xl font-bold mb-6 select-none transition-all duration-300 ${
               isFlashing 
                 ? 'text-gray-500 cursor-not-allowed' 
-                : 'text-red-400 hover:text-red-300 hover:scale-105 cursor-pointer'
+                : showAttention
+                ? 'text-white animate-pulse cursor-pointer'
+                : 'hot-metal-text cursor-pointer'
             }`}
             whileHover={!isFlashing ? { scale: 1.05 } : {}}
             whileTap={!isFlashing ? { scale: 0.95 } : {}}
