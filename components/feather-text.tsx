@@ -96,7 +96,7 @@ export function FeatherText({ children, className }: FeatherTextProps) {
         {children}
       </div>
 
-      {/* Feathers container */}
+     
       <div className="absolute inset-0 pointer-events-none">
         {feathers.map((feather) => (
           <div
