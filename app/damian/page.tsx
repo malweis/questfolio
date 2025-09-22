@@ -9,7 +9,7 @@ import { AnimatePresence } from "framer-motion";
 import { SoundProvider, useSound } from "../../components/sound-context";
 import SoundConsentOverlay from "../../components/sound-consent-overlay";
 import FloatingSoundToggle from "../../components/floating-sound-toggle";
-import PunchEffectComponent from "../../components/punch-effect-component";
+import FlashbangButton from "../../components/flashbang-button";
 import CreditsLink from "../../components/credits-link";
 import { FeatherText } from "../../components/feather-text";
 import { GlitchText } from "../../components/glitch-text";
@@ -83,7 +83,7 @@ function DamianPageContent() {
   const [resetTrigger, setResetTrigger] = useState(false);
   const [hasTriggered, setHasTriggered] = useState(false);
   const [soundEnabled, setSoundEnabled] = useState(true);
-  const [punchTriggered, setPunchTriggered] = useState(false);
+  const [flashbangTriggered, setFlashbangTriggered] = useState(false);
   const { setSoundConsent } = useSound();
   const [showConsent, setShowConsent] = useState(false);
 
@@ -126,14 +126,14 @@ function DamianPageContent() {
     setTimeout(() => setResetTrigger(false), 100);
   };
 
-  const handlePunchTriggered = () => {
-    setPunchTriggered(true);
-    // Scroll to top when punch is triggered to show the beginning of the new component
+  const handleFlashbangTriggered = () => {
+    setFlashbangTriggered(true);
+    // Scroll to top when flashbang is triggered to show the beginning of the new component
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
-  const handlePunchReset = () => {
-    setPunchTriggered(false);
+  const handleFlashbangReset = () => {
+    setFlashbangTriggered(false);
     setHasTriggered(false);
     setManualTrigger(false);
     setResetTrigger(false);
@@ -158,7 +158,7 @@ function DamianPageContent() {
 
   return (
     <>
-      <FFXIVBackgroundWrapper stormTriggered={punchTriggered}>
+      <FFXIVBackgroundWrapper stormTriggered={flashbangTriggered}>
         {/* Top black bar */}
         <motion.div 
           className="hidden md:block h-16 bg-black"
@@ -209,11 +209,11 @@ function DamianPageContent() {
             transition={{ delay: 0.7 }}
           >
             <AnimatePresence mode="wait">
-              {!punchTriggered ? (
+              {!flashbangTriggered ? (
                 <div className="max-w-4xl mx-auto">
                   {/* First Part Content */}
                   <motion.section 
-                    className="bg-black/30 backdrop-blur-sm rounded-2xl  p-2  md:p-8 border border-white/10 mb-8 w-full"
+                    className="bg-black/30 backdrop-blur-sm rounded-2xl p-2 md:p-8 border border-white/10 mb-8 w-full"
                     initial={{ opacity: 0, y: 20 }}
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ duration: 0.8 }}
@@ -223,12 +223,10 @@ function DamianPageContent() {
                     </div>
                   </motion.section>
                   
-                  {/* Punch Effect Component */}
-                  <PunchEffectComponent
-                    onPunchTriggered={handlePunchTriggered}
-                    onReset={handlePunchReset}
-                    Part1Component={Part1Component}
-                    components={components}
+                  {/* Flashbang Button */}
+                  <FlashbangButton
+                    onFlashbangTriggered={handleFlashbangTriggered}
+                    onReset={handleFlashbangReset}
                   />
                 </div>
               ) : (
