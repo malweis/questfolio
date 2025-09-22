@@ -79,8 +79,22 @@ export function FeatherText({ children, className }: FeatherTextProps) {
   }, [dimensions])
 
   return (
-    <div ref={containerRef} className={cn("relative overflow-hidden", className)} style={{ minHeight: "1.2em" }}>
-      <div className="relative z-10 text-balance">{children}</div>
+    <div 
+      ref={containerRef} 
+      className={cn(
+        "relative overflow-hidden rounded-2xl p-8 mx-auto max-w-4xl",
+        "bg-gradient-to-br from-slate-700/95 via-slate-600/90 to-slate-500/85",
+        "backdrop-blur-sm border border-white/20 shadow-2xl",
+        "before:absolute before:inset-0 before:rounded-2xl before:bg-gradient-to-br before:from-white/5 before:to-transparent before:pointer-events-none",
+        className
+      )} 
+      style={{ minHeight: "1.2em" }}
+    >
+ 
+      
+      <div className="relative z-10 text-balance text-white/95 leading-relaxed">
+        {children}
+      </div>
 
       {/* Feathers container */}
       <div className="absolute inset-0 pointer-events-none">
@@ -114,7 +128,7 @@ function FeatherSVG() {
       viewBox="0 0 20 24"
       fill="none"
       xmlns="http://www.w3.org/2000/svg"
-      className="text-black opacity-80"
+      className="text-black opacity-90 drop-shadow-lg"
     >
       {/* Main feather shape - crow feather */}
       <path

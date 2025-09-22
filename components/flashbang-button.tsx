@@ -75,7 +75,7 @@ export default function FlashbangButton({
             whileHover={!isFlashing ? { scale: 1.05 } : {}}
             whileTap={!isFlashing ? { scale: 0.95 } : {}}
           >
-            {isFlashing ? "Contemplando..." : "Contempla el fuego que ayudaste a crear"}
+            {isFlashing ? "..." : "Contempla el fuego que ayudaste a crear"}
           </motion.p>
           
           {/* Reset button - only show when flashing */}
