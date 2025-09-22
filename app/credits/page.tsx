@@ -134,6 +134,46 @@ export default function CreditsPage() {
                 <p className="text-white/60 text-sm">License: Creative Commons 0</p>
                 <a href="https://freesound.org/s/392997/" className="text-amber-400 hover:text-amber-300 text-sm">https://freesound.org/s/392997/</a>
               </div>
+              
+              <div className="bg-white/5 rounded-lg p-6 border border-white/10">
+                <h3 className="text-xl font-semibold text-white mb-3">Background Artwork - Moon City</h3>
+                <p className="text-white/80 mb-2">Atmospheric cityscape with moon for story backgrounds</p>
+                <p className="text-white/60 text-sm">Artist: Dimitar Ivanov</p>
+                <p className="text-white/60 text-sm">Platform: ArtStation</p>
+                <a href="https://www.artstation.com/artwork/48JYP1" className="text-amber-400 hover:text-amber-300 text-sm">https://www.artstation.com/artwork/48JYP1</a>
+              </div>
+              
+              <div className="bg-white/5 rounded-lg p-6 border border-white/10">
+                <h3 className="text-xl font-semibold text-white mb-3">Background Artwork - City Scene</h3>
+                <p className="text-white/80 mb-2">Urban landscape artwork for story backgrounds</p>
+                <p className="text-white/60 text-sm">Artist: Chris Riley</p>
+                <p className="text-white/60 text-sm">Platform: ArtStation</p>
+                <a href="https://www.artstation.com/artwork/obRn5m" className="text-amber-400 hover:text-amber-300 text-sm">https://www.artstation.com/artwork/obRn5m</a>
+              </div>
+              
+              <div className="bg-white/5 rounded-lg p-6 border border-white/10">
+                <h3 className="text-xl font-semibold text-white mb-3">Background Artwork - Sun Scene</h3>
+                <p className="text-white/80 mb-2">Dramatic sunlit landscape for story backgrounds</p>
+                <p className="text-white/60 text-sm">Artist: Tianyu Sun</p>
+                <p className="text-white/60 text-sm">Platform: ArtStation</p>
+                <a href="https://www.artstation.com/artwork/qJKDXR" className="text-amber-400 hover:text-amber-300 text-sm">https://www.artstation.com/artwork/qJKDXR</a>
+              </div>
+              
+              <div className="bg-white/5 rounded-lg p-6 border border-white/10">
+                <h3 className="text-xl font-semibold text-white mb-3">Background Artwork - Night Sky</h3>
+                <p className="text-white/80 mb-2">Starry night sky artwork for story backgrounds</p>
+                <p className="text-white/60 text-sm">Artist: VulpisSkull</p>
+                <p className="text-white/60 text-sm">Platform: ArtStation</p>
+                <a href="https://www.artstation.com/artwork/xYldnr" className="text-amber-400 hover:text-amber-300 text-sm">https://www.artstation.com/artwork/xYldnr</a>
+              </div>
+              
+              <div className="bg-white/5 rounded-lg p-6 border border-white/10">
+                <h3 className="text-xl font-semibold text-white mb-3">Background Artwork - Chabas Town</h3>
+                <p className="text-white/80 mb-2">Townscape artwork for story backgrounds</p>
+                <p className="text-white/60 text-sm">Artist: Nick Storozhenko</p>
+                <p className="text-white/60 text-sm">Platform: ArtStation</p>
+                <a href="https://www.artstation.com/artwork/2xDaeK" className="text-amber-400 hover:text-amber-300 text-sm">https://www.artstation.com/artwork/2xDaeK</a>
+              </div>
             </div>
           </motion.section>
 

@@ -3,7 +3,7 @@
 import { motion } from "framer-motion";
 import Link from "next/link";
 import { useEffect, useState, lazy, Suspense, ReactNode } from "react";
-import FFXIVBackgroundWrapper from "../../components/ffxiv-background-wrapper";
+import MisfitsBackgroundWrapper from "../../components/misfits-background-wrapper";
 import { AnimatePresence } from "framer-motion";
 import { SoundProvider, useSound } from "../../components/sound-context";
 import SoundConsentOverlay from "../../components/sound-consent-overlay";
@@ -284,7 +284,7 @@ function DamianPageContent() {
 
   return (
     <>
-      <FFXIVBackgroundWrapper stormTriggered={currentPart > 1}>
+      <MisfitsBackgroundWrapper currentPart={currentPart}>
         {/* Top black bar */}
         <motion.div 
           className="hidden md:block h-16 bg-black"
@@ -484,7 +484,7 @@ function DamianPageContent() {
           animate={{ y: 0 }}
           transition={{ duration: 0.8, ease: "easeOut" }}
         />
-      </FFXIVBackgroundWrapper>
+      </MisfitsBackgroundWrapper>
 
       {/* Sound Consent Overlay - Only show when needed */}
       {showConsent && <SoundConsentOverlay onConsent={handleConsent} />}
