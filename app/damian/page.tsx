@@ -4,7 +4,6 @@ import { motion } from "framer-motion";
 import Link from "next/link";
 import { useEffect, useState, lazy, Suspense, ReactNode } from "react";
 import FFXIVBackgroundWrapper from "../../components/ffxiv-background-wrapper";
-import FullStorySection from "../../components/full-story-section";
 import { AnimatePresence } from "framer-motion";
 import { SoundProvider, useSound } from "../../components/sound-context";
 import SoundConsentOverlay from "../../components/sound-consent-overlay";
@@ -78,14 +77,16 @@ const components = {
 function DamianPageContent() {
   const [Part1Component, setPart1Component] = useState<MDXComponent | undefined>(undefined);
   const [Part2Component, setPart2Component] = useState<MDXComponent | undefined>(undefined);
+  const [Part3Component, setPart3Component] = useState<MDXComponent | undefined>(undefined);
   const [loading, setLoading] = useState(true);
-  const [manualTrigger, setManualTrigger] = useState(false);
-  const [resetTrigger, setResetTrigger] = useState(false);
-  const [hasTriggered, setHasTriggered] = useState(false);
   const [soundEnabled, setSoundEnabled] = useState(true);
-  const [flashbangTriggered, setFlashbangTriggered] = useState(false);
   const { setSoundConsent } = useSound();
   const [showConsent, setShowConsent] = useState(false);
+  
+  // Wizard-like state management
+  const [currentPart, setCurrentPart] = useState(1);
+  const [history, setHistory] = useState<number[]>([1]);
+  const [, setIsTransitioning] = useState(false);
 
   useEffect(() => {
     // Show consent overlay when the page loads
@@ -96,14 +97,16 @@ function DamianPageContent() {
     async function loadMDXContent() {
       try {
         // Use Promise.all for parallel loading - basic optimization
-        const [part1Module, part2Module] = await Promise.all([
+        const [part1Module, part2Module, part3Module] = await Promise.all([
           import('../../content/damian-lore-part1.mdx'),
-          import('../../content/damian-lore-part2.mdx')
+          import('../../content/damian-lore-part2.mdx'),
+          import('../../content/damian-lore-part3.mdx')
         ]);
         
         // Extract the default export content
         setPart1Component(() => part1Module.default);
         setPart2Component(() => part2Module.default);
+        setPart3Component(() => part3Module.default);
         setLoading(false);
       } catch (error) {
         console.error('Error loading MDX content:', error);
@@ -114,29 +117,35 @@ function DamianPageContent() {
     loadMDXContent();
   }, []);
 
-  const handleStartAnimation = () => {
-    setManualTrigger(true);
-    setHasTriggered(true);
-  };
-
-  const handleResetAnimation = () => {
-    setResetTrigger(true);
-    setHasTriggered(false);
-    // Reset the trigger after a short delay
-    setTimeout(() => setResetTrigger(false), 100);
-  };
-
-  const handleFlashbangTriggered = () => {
-    setFlashbangTriggered(true);
-    // Scroll to top when flashbang is triggered to show the beginning of the new component
+  // Navigation functions for wizard-like state management
+  const goToPart = (partNumber: number) => {
+    setHistory(prev => [...prev, currentPart]);
+    setCurrentPart(partNumber);
+    setIsTransitioning(true);
+    // Scroll to top when transitioning
     window.scrollTo({ top: 0, behavior: 'smooth' });
+    // Reset transition after animation
+    setTimeout(() => setIsTransitioning(false), 1000);
   };
 
-  const handleFlashbangReset = () => {
-    setFlashbangTriggered(false);
-    setHasTriggered(false);
-    setManualTrigger(false);
-    setResetTrigger(false);
+  const goBack = () => {
+    if (history.length > 1) {
+      const previousPart = history[history.length - 1];
+      setHistory(prev => prev.slice(0, -1));
+      setCurrentPart(previousPart);
+      setIsTransitioning(true);
+      // Scroll to top when going back
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+      setTimeout(() => setIsTransitioning(false), 1000);
+    }
+  };
+
+  const resetToBeginning = () => {
+    setCurrentPart(1);
+    setHistory([1]);
+    setIsTransitioning(true);
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+    setTimeout(() => setIsTransitioning(false), 1000);
   };
 
   const toggleSound = () => {
@@ -146,6 +155,121 @@ function DamianPageContent() {
   const handleConsent = () => {
     setSoundConsent(true);
     setShowConsent(false);
+  };
+
+  // Function to render the current part
+  const renderCurrentPart = () => {
+    switch (currentPart) {
+      case 1:
+        return (
+          <div className="max-w-4xl mx-auto">
+            {/* First Part Content */}
+            <motion.section 
+              className="bg-black/30 backdrop-blur-sm rounded-2xl p-2 md:p-8 border border-white/10 mb-8 w-full"
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.8 }}
+            >
+              <div className="prose prose-invert max-w-none">
+                {Part1Component && <Part1Component components={components} />}
+              </div>
+            </motion.section>
+            
+            {/* Flashbang Button */}
+            <FlashbangButton
+              onFlashbangTriggered={() => goToPart(2)}
+              onReset={resetToBeginning}
+            />
+          </div>
+        );
+      case 2:
+        return (
+          <div className="max-w-4xl mx-auto">
+            {/* Second Part Content */}
+            <motion.section 
+              className="bg-black/30 backdrop-blur-sm rounded-2xl p-2 md:p-8 border border-white/10 mb-8 w-full"
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.8 }}
+            >
+              <div className="prose prose-invert max-w-none">
+                {Part2Component && <Part2Component components={components} />}
+              </div>
+            </motion.section>
+            
+            {/* Navigation Buttons */}
+            <div className="flex gap-4 justify-center flex-wrap">
+              <motion.button
+                onClick={goBack}
+                className="px-6 py-3 bg-gray-600 hover:bg-gray-700 text-white font-semibold rounded-lg transition-colors duration-200"
+                whileHover={{ scale: 1.05 }}
+                whileTap={{ scale: 0.95 }}
+              >
+                ← Back
+              </motion.button>
+              <motion.button
+                onClick={() => goToPart(3)}
+                className="px-6 py-3 bg-purple-600 hover:bg-purple-700 text-white font-semibold rounded-lg transition-colors duration-200"
+                whileHover={{ scale: 1.05 }}
+                whileTap={{ scale: 0.95 }}
+              >
+                Continue →
+              </motion.button>
+            </div>
+          </div>
+        );
+      case 3:
+        return (
+          <div className="max-w-4xl mx-auto">
+            {/* Third Part Content */}
+            <motion.section 
+              className="bg-black/30 backdrop-blur-sm rounded-2xl p-2 md:p-8 border border-white/10 mb-8 w-full"
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.8 }}
+            >
+              <div className="prose prose-invert max-w-none">
+                {Part3Component && <Part3Component components={components} />}
+              </div>
+            </motion.section>
+            
+            {/* Navigation Buttons */}
+            <div className="flex gap-4 justify-center flex-wrap">
+              <motion.button
+                onClick={goBack}
+                className="px-6 py-3 bg-gray-600 hover:bg-gray-700 text-white font-semibold rounded-lg transition-colors duration-200"
+                whileHover={{ scale: 1.05 }}
+                whileTap={{ scale: 0.95 }}
+              >
+                ← Back
+              </motion.button>
+              <motion.button
+                onClick={resetToBeginning}
+                className="px-6 py-3 bg-red-600 hover:bg-red-700 text-white font-semibold rounded-lg transition-colors duration-200"
+                whileHover={{ scale: 1.05 }}
+                whileTap={{ scale: 0.95 }}
+              >
+                Start Over
+              </motion.button>
+            </div>
+          </div>
+        );
+      default:
+        return (
+          <div className="max-w-4xl mx-auto">
+            <motion.section 
+              className="bg-black/30 backdrop-blur-sm rounded-2xl p-2 md:p-8 border border-white/10 mb-8 w-full"
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.8 }}
+            >
+              <div className="prose prose-invert max-w-none">
+                {Part1Component && <Part1Component components={components} />}
+              </div>
+            </motion.section>
+          </div>
+        );
+    }
   };
 
   if (loading) {
@@ -158,7 +282,7 @@ function DamianPageContent() {
 
   return (
     <>
-      <FFXIVBackgroundWrapper stormTriggered={flashbangTriggered}>
+      <FFXIVBackgroundWrapper stormTriggered={currentPart > 1}>
         {/* Top black bar */}
         <motion.div 
           className="hidden md:block h-16 bg-black"
@@ -190,6 +314,24 @@ function DamianPageContent() {
             <h1 className="text-4xl sm:text-6xl font-bold text-white mb-4">Damian</h1>
             <p className="text-xl text-white/80 max-w-2xl mx-auto">Shadow Walker • Blood Moon Born</p>
             
+            {/* Progress Indicator */}
+            <div className="mt-4 flex justify-center">
+              <div className="flex gap-2">
+                {[1, 2, 3].map((part) => (
+                  <div
+                    key={part}
+                    className={`w-3 h-3 rounded-full transition-colors duration-300 ${
+                      part === currentPart
+                        ? 'bg-purple-400'
+                        : part < currentPart
+                        ? 'bg-purple-600'
+                        : 'bg-gray-600'
+                    }`}
+                  />
+                ))}
+              </div>
+            </div>
+            
             {/* Sound Toggle Button */}
             <motion.button
               onClick={toggleSound}
@@ -201,7 +343,7 @@ function DamianPageContent() {
             </motion.button>
           </motion.div>
 
-          {/* Main Lore Section - Punch Effect Flow */}
+          {/* Main Lore Section - Wizard-like State Management */}
           <motion.section 
             className="max-w-6xl mx-auto mb-16 relative"
             initial={{ opacity: 0, y: 30 }}
@@ -209,39 +351,15 @@ function DamianPageContent() {
             transition={{ delay: 0.7 }}
           >
             <AnimatePresence mode="wait">
-              {!flashbangTriggered ? (
-                <div className="max-w-4xl mx-auto">
-                  {/* First Part Content */}
-                  <motion.section 
-                    className="bg-black/30 backdrop-blur-sm rounded-2xl p-2 md:p-8 border border-white/10 mb-8 w-full"
-                    initial={{ opacity: 0, y: 20 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    transition={{ duration: 0.8 }}
-                  >
-                    <div className="prose prose-invert max-w-none">
-                      {Part1Component && <Part1Component components={components} />}
-                    </div>
-                  </motion.section>
-                  
-                  {/* Flashbang Button */}
-                  <FlashbangButton
-                    onFlashbangTriggered={handleFlashbangTriggered}
-                    onReset={handleFlashbangReset}
-                  />
-                </div>
-              ) : (
-                <FullStorySection
-                  key="full-story"
-                  Part1Component={Part1Component}
-                  Part2Component={Part2Component}
-                  components={components}
-                  manualTrigger={manualTrigger}
-                  resetTrigger={resetTrigger}
-                  hasTriggered={hasTriggered}
-                  onStartAnimation={handleStartAnimation}
-                  onResetAnimation={handleResetAnimation}
-                />
-              )}
+              <motion.div
+                key={currentPart}
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: -20 }}
+                transition={{ duration: 0.5 }}
+              >
+                {renderCurrentPart()}
+              </motion.div>
             </AnimatePresence>
           </motion.section>
 
