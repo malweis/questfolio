@@ -173,13 +173,15 @@ function DamianPageContent() {
               <div className="prose prose-invert max-w-none">
                 {Part1Component && <Part1Component components={components} />}
               </div>
+              
+              {/* Flashbang Button - Inside the story section */}
+              <div className="mt-8">
+                <FlashbangButton
+                  onFlashbangTriggered={() => goToPart(2)}
+                  onReset={resetToBeginning}
+                />
+              </div>
             </motion.section>
-            
-            {/* Flashbang Button */}
-            <FlashbangButton
-              onFlashbangTriggered={() => goToPart(2)}
-              onReset={resetToBeginning}
-            />
           </div>
         );
       case 2:

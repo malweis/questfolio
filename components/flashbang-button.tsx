@@ -1,8 +1,9 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { motion } from "framer-motion";
 import { Button } from "@/components/ui/button";
+import { createPortal } from "react-dom";
 
 interface FlashbangButtonProps {
   onFlashbangTriggered: () => void;
@@ -14,6 +15,11 @@ export default function FlashbangButton({
   onReset
 }: FlashbangButtonProps) {
   const [isFlashing, setIsFlashing] = useState(false);
+  const [isMounted, setIsMounted] = useState(false);
+
+  useEffect(() => {
+    setIsMounted(true);
+  }, []);
 
   const triggerFlashbang = () => {
     if (isFlashing) return;
@@ -33,52 +39,53 @@ export default function FlashbangButton({
 
   return (
     <div className="relative w-full overflow-hidden">
-      {/* Flashbang Button */}
-      <div className="flex flex-col items-center justify-center py-16">
+      {/* Interactive Phrase */}
+      <div className="flex flex-col items-center justify-center py-8">
         <motion.div
           className="max-w-4xl mx-auto text-center"
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8 }}
         >
-          <h2 className="text-3xl sm:text-4xl font-bold text-white mb-6">Ready for Impact?</h2>
-          <p className="text-lg text-white/80 mb-8 max-w-2xl mx-auto">
-            Damian&apos;s story is about to take a dramatic turn. Are you ready to experience the moment that changes everything?
-          </p>
+          {/* Interactive Spanish phrase */}
+          <motion.p
+            onClick={isFlashing ? undefined : triggerFlashbang}
+            className={`text-2xl sm:text-3xl font-bold mb-6 select-none transition-all duration-300 ${
+              isFlashing 
+                ? 'text-gray-500 cursor-not-allowed' 
+                : 'text-red-400 hover:text-red-300 hover:scale-105 cursor-pointer'
+            }`}
+            whileHover={!isFlashing ? { scale: 1.05 } : {}}
+            whileTap={!isFlashing ? { scale: 0.95 } : {}}
+          >
+            {isFlashing ? "Contemplando..." : "Contempla el fuego que ayudaste a crear"}
+          </motion.p>
           
-          <div className="flex gap-4 justify-center flex-wrap">
-            <Button
-              onClick={triggerFlashbang}
-              disabled={isFlashing}
-              size="lg"
-              className="bg-red-600 hover:bg-red-700 text-white font-bold px-8 py-4 text-lg disabled:bg-gray-600"
+          {/* Reset button - only show when flashing */}
+          {isFlashing && (
+            <motion.div
+              initial={{ opacity: 0, scale: 0.8 }}
+              animate={{ opacity: 1, scale: 1 }}
+              className="mt-4"
             >
-              {isFlashing ? "FLASHING..." : "💥 FLASHBANG"}
-            </Button>
-            
-            {isFlashing && (
-              <motion.div
-                initial={{ opacity: 0, scale: 0.8 }}
-                animate={{ opacity: 1, scale: 1 }}
+              <Button
+                onClick={handleReset}
+                size="sm"
+                className="bg-gray-600 hover:bg-gray-700 text-white font-semibold px-4 py-2"
               >
-                <Button
-                  onClick={handleReset}
-                  size="lg"
-                  className="bg-gray-600 hover:bg-gray-700 text-white font-semibold px-6 py-4"
-                >
-                  Reset
-                </Button>
-              </motion.div>
-            )}
-          </div>
+                Reset
+              </Button>
+            </motion.div>
+          )}
         </motion.div>
       </div>
 
-      {/* Flashbang effect overlay - Full screen */}
-      {isFlashing && (
+      {/* Flashbang effect overlay - Full screen using portal */}
+      {isFlashing && isMounted && createPortal(
         <div className="fixed inset-0 z-50 pointer-events-none flex items-center justify-center">
           <div className="bg-white rounded-full animate-expand-circle" />
-        </div>
+        </div>,
+        document.body
       )}
     </div>
   );
